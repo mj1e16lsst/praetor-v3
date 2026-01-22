@@ -1,0 +1,15 @@
+from setuptools import setup
+
+setup(name='praetor',
+      version='3.6.9',
+      python_requires='>=3.7',
+      description='Automatic Generation of Provenance from Python3 Scripts',
+      url='https://gitlab.mpcdf.mpg.de/PRAETOR/prov-PRAETOR_public/',
+      author='Michael Johnson',
+      author_email='michael.johnson0100@gmail.com',
+      license='MIT',
+      packages=['praetor'],
+      install_requires=['pandas', 'prov', 'requests'],
+      scripts=[],
+      zip_safe=False)
+
