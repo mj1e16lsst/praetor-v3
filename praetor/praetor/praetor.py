@@ -113,29 +113,17 @@ def get_non_builtin_modules_versions():
 
 
 class CallTracer:
-    session_id = generate_pipeline_id()  # change praetor to name of pipeline
-    prov_id_counter = Counter()
-    prov_id_cache = dict()
 
-    out_directory = "./output/"
-
-    os.makedirs(out_directory + "json/", exist_ok=True)
-    os.makedirs(out_directory + "big_entities/", exist_ok=True)
-
-    if not out_directory.endswith("/"):
-        out_directory += "/"
-    out_handle = open(out_directory + "json/" + session_id + ".json", "a")
     close_file_var = True
+    out_handle = None
 
-    mods = get_non_builtin_modules_versions()
-    get_modules(session_id, out_directory, mods)
+    def __init__(self, output_directory="./output/", block_list_mod=None, block_list_func=None, cpython=False,
+                 bootstrap=False):
 
-    last_activity = {"id": None, "end": None, "start": None, "name": None}
-    activity_counter = {}
-    bindings = {}
-    def __init__(self):
-        # frame_id -> metadata dict
         self.calls = {}
+        self.session_id = generate_pipeline_id()  # change praetor to name of pipeline
+        self.prov_id_counter = Counter()
+        self.prov_id_cache = dict()
 
         self.prefix = "run:"
         self.dtypes = {'int': 'int', 'unsignedInt': 'unsignedInt', 'hexBinary': 'hexBinary', 'NOTATION': 'NOTATION',
@@ -154,6 +142,25 @@ class CallTracer:
                   'gYear': 'gYear',
                   'token': 'token', 'time': 'time', 'yearMonthDuration': 'yearMonthDuration', 'NCName': 'NCName',
                   'str': 'string'}
+        self.out_directory = output_directory
+        if not self.out_directory.endswith("/"):
+            self.out_directory += "/"
+
+        os.makedirs(self.out_directory + "json/", exist_ok=True)
+        os.makedirs(self.out_directory + "big_entities/", exist_ok=True)
+        self.out_handle = open(self.out_directory + "json/" + self.session_id + ".json", "a")
+
+        mods = get_non_builtin_modules_versions()
+        get_modules(self.session_id, self.out_directory, mods)
+
+        self.last_activity = {"id": None, "end": None, "start": None, "name": None}
+        self.activity_counter = {}
+        self.bindings = {}
+
+        self.block_list_modules = block_list_mod
+        self.block_list_func = block_list_func
+        self.cpython = cpython
+        self.bootstrap = bootstrap
 
     def __call__(self, frame, event, arg):
 
@@ -166,10 +173,26 @@ class CallTracer:
             if module_name == "set_trace_functioon":
                 print("passing my mod")
                 return self
-
+            # #
             # Ignore module-level frames
-            if func_name == "<module>" or module_name in ["importlib._bootstrap_external", "importlib._bootstrap"]:
+            if func_name == "<module>":
                 return self
+
+            if self.bootstrap and module_name in ["importlib._bootstrap_external", "importlib._bootstrap"]:
+                return self
+
+            if self.block_list_modules:
+                if module_name in self.block_list_modules:
+                    return self
+                for mod in self.block_list_modules:
+                    if module_name.startswith(mod):
+                        return self
+
+
+            if self.block_list_func:
+                if func_name in self.block_list_func:
+                    return self
+
 
             self.name = func_name
             self.module_name = module_name
@@ -217,14 +240,13 @@ class CallTracer:
             }
             self.inputs = inputs
 
-            if event == "c_call":
-
+            if self.cpython and event == "c_call":
                 self.start_time = self.date_time_stamp()
                 self.prov_call_in()
                 self.dump_json()
                 return self
 
-            if event == "c_return":
+            if self.cpython and event == "c_return":
                 self.end_time = self.date_time_stamp()
                 self.output = "None"
                 self.prov_call_out()
