@@ -170,7 +170,7 @@ class CallTracer:
             func_name = code.co_name
             module_name = frame.f_globals.get("__name__", None)
 
-            if module_name == "set_trace_functioon":
+            if module_name == "praetor":
                 print("passing my mod")
                 return self
             # #
@@ -210,14 +210,14 @@ class CallTracer:
 
                 self.start_time = self.date_time_stamp()
                 self.prov_call_in()
-                self.dump_json()
+                self.dump_json(mode="call")
                 return self
 
             elif event == "return":
                 self.output = arg
                 self.end_time = self.date_time_stamp()
                 self.prov_call_out()
-                self.dump_json()
+                self.dump_json(mode="return")
                 return self
 
         elif event in ["c_call", "c_return"]:
@@ -243,19 +243,17 @@ class CallTracer:
             if self.cpython and event == "c_call":
                 self.start_time = self.date_time_stamp()
                 self.prov_call_in()
-                self.dump_json()
+                self.dump_json(mode="call")
                 return self
 
             if self.cpython and event == "c_return":
                 self.end_time = self.date_time_stamp()
                 self.output = "None"
                 self.prov_call_out()
-                self.dump_json()
+                self.dump_json(mode="return")
                 return self
 
-
-
-
+        # code for if events are to be added
         # elif event == "exception":
         #     meta = self.calls.get(id(frame))
         #     if meta is not None:
@@ -365,7 +363,7 @@ class CallTracer:
         # add gate to see if it is on the stack
         # stack_function = self.track_call()
         if self.last_activity['id']:
-            self.bindings['{}'.format(self.stack_id)]['message2'] = {"@id": "urn_uuid:{}_{}".format(self.last_activity['name'], self.last_activity['id'])}
+            self.bindings['{}'.format(self.stack_id)]['message2'] = {"@id": "urn_uuid:{}_{}".format(self.session_id, self.last_activity['id'])}
             self.bindings['{}'.format(self.stack_id)]['message2StartTime'] = {"@type": "xsd:dateTime", "@value":self.last_activity['end']}
             self.bindings['{}'.format(self.stack_id)]['message2EndTime'] = {"@type": "xsd:dateTime", "@value": self.last_activity['start']}
 
@@ -389,40 +387,37 @@ class CallTracer:
 
     def prov_call_out(self):
 
-        try:
-            self.bindings['{}'.format(self.stack_id)]['messageEndTime'] = {"@type": "xsd:dateTime", "@value": self.end_time}
-        except KeyError:
-            # print("return but no call")
-            self.bindings['{}'.format(self.stack_id)] = {}
-            self.bindings['{}'.format(self.stack_id)]['moduleName'] = {"@type": "xsd:string",
-                                                                       "@value": self.module_name}
-            self.bindings['{}'.format(self.stack_id)]['activityName'] = {"@type": "xsd:string", "@value": self.name}
-            self.bindings['{}'.format(self.stack_id)]['message'] = {
-                "@id": "urn_uuid:{}_{}".format(self.session_id, self.stack_id)}
+        self.bindings['{}'.format(self.stack_id)] = {}
+        self.bindings['{}'.format(self.stack_id)]['messageEndTime'] = {"@type": "xsd:dateTime", "@value": self.end_time}
+        self.bindings['{}'.format(self.stack_id)]['moduleName'] = {"@type": "xsd:string",
+                                                                   "@value": self.module_name}
+        self.bindings['{}'.format(self.stack_id)]['activityName'] = {"@type": "xsd:string", "@value": self.name}
+        self.bindings['{}'.format(self.stack_id)]['message'] = {
+            "@id": "urn_uuid:{}_{}".format(self.session_id, self.stack_id)}
 
-            counter = 0
-            for key, value in self.inputs.items():
-                in_value, in_type = self.find_type(value)
-                in_id = self.generate_persistent_id(value)
-                if len(in_value) > 1024:
-                    in_value = self.large_object_handling(in_value, in_id)
-                self.bindings['{}'.format(self.stack_id)]['input_{}'.format(counter)] = {'@id': self.prefix + in_id,
-                                                                                         '@value': in_value,
-                                                                                         '@type': "xsd:{}".format(
-                                                                                             in_type), '@role': key}
-                counter += 1
+        counter = 0
+        for key, value in self.inputs.items():
+            in_value, in_type = self.find_type(value)
+            in_id = self.generate_persistent_id(value)
+            if len(in_value) > 1024:
+                in_value = self.large_object_handling(in_value, in_id)
+            self.bindings['{}'.format(self.stack_id)]['input_{}'.format(counter)] = {'@id': self.prefix + in_id,
+                                                                                     '@value': in_value,
+                                                                                     '@type': "xsd:{}".format(
+                                                                                         in_type), '@role': key}
+            counter += 1
 
-            output_list = [self.output]
-            if output_list:
-                for i, output_item in enumerate(output_list):
-                    out_value, out_type = self.find_type(output_item)
-                    # print(out_value)
-                    out_id = self.generate_persistent_id(output_item)
-                    if len(out_value) > 1024:
-                        out_value = self.large_object_handling(out_value, out_id)
-                    self.bindings['{}'.format(self.stack_id)]['output_{}'.format(i)] = {
-                        '@id': self.prefix + out_id, '@value': out_value,
-                        '@type': "xsd:{}".format(out_type)}
+        output_list = [self.output]
+        if output_list:
+            for i, output_item in enumerate(output_list):
+                out_value, out_type = self.find_type(output_item)
+                # print(out_value)
+                out_id = self.generate_persistent_id(output_item)
+                if len(out_value) > 1024:
+                    out_value = self.large_object_handling(out_value, out_id)
+                self.bindings['{}'.format(self.stack_id)]['output_{}'.format(i)] = {
+                    '@id': self.prefix + out_id, '@value': out_value,
+                    '@type': "xsd:{}".format(out_type)}
 
         output_list = [self.output]
         if output_list:
@@ -434,16 +429,23 @@ class CallTracer:
                 self.bindings['{}'.format(self.stack_id)]['output_{}'.format(i)] = {'@id' : self.prefix + out_id, '@value': out_value,
                                                                          '@type': "xsd:{}".format(out_type)}
 
+        if self.last_activity['id']:
+            self.bindings['{}'.format(self.stack_id)]['message2'] = {"@id": "urn_uuid:{}_{}".format(self.session_id, self.last_activity['id'])}
+            self.bindings['{}'.format(self.stack_id)]['message2StartTime'] = {"@type": "xsd:dateTime", "@value":self.last_activity['end']}
+            self.bindings['{}'.format(self.stack_id)]['message2EndTime'] = {"@type": "xsd:dateTime", "@value": self.last_activity['start']}
+
+
         self.last_activity['id'] = self.stack_id
         self.last_activity['name'] = self.name
         self.last_activity['end'] = self.end_time
         self.last_activity['start'] = self.start_time
 
 
-    def dump_json(self):
+    def dump_json(self, mode):
         json_metadata = self.bindings.pop(self.stack_id, None)
         # print(json_metadata)
-        json_str = json.dumps(json_metadata)
+        new_json = {'@id': '{}'.format(self.stack_id), '@mode': mode, '@data': json_metadata}
+        json_str = json.dumps(new_json)
         self.out_handle.write(json_str + '\n')
         self.out_handle.flush()
 
