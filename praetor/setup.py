@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='praetor',
-      version='3.6.9',
+      version='4.1',
       python_requires='>=3.7',
       description='Automatic Generation of Provenance from Python3 Scripts',
       url='https://gitlab.mpcdf.mpg.de/PRAETOR/prov-PRAETOR_public/',
@@ -10,6 +10,6 @@ setup(name='praetor',
       license='MIT',
       packages=['praetor'],
       install_requires=['pandas', 'prov', 'requests'],
-      scripts=[],
+      scripts=["bin/create_ttl.py"],
       zip_safe=False)
 

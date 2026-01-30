@@ -41,18 +41,26 @@ class Converter:
         self.blank_counter = 0
 
     def generate_activity_triple(self):
-        act_string = """
-<{0}> a prov:Activity ;
-    prov:startedAtTime "{1}"^^{2} ;
-    prov:endedAtTime "{3}"^^{4} ;
-    prtr:activityName "{5}" ;
-    prtr:activitySource "{6}" .
 
-<{0}> prov:wasAssociatedWith <{7}> .""".format(self.bindings['message']["@id"],
-                                                       self.bindings["messageStartTime"]["@value"],
-                                                       self.bindings["messageStartTime"]["@type"],
-                                                       self.bindings["messageEndTime"]["@value"],
-                                                       self.bindings["messageEndTime"]["@type"],
+        if self.bindings['messageStartTime']['@value'] == "-":
+            start_time_line = ""
+        else:
+            start_time_line = '\n    prov:startedAtTime "{0}"^^{1} ;\n'.format(self.bindings['messageStartTime']['@value'],
+                                                                           self.bindings['messageStartTime']['@type'])
+
+        if self.bindings['messageEndTime']['@value'] == "-":
+            end_time_line = ""
+        else:
+            end_time_line = '\n    prov:endedAtTime "{0}"^^{1} ;\n'.format(self.bindings['messageEndTime']['@value'],
+                                                                       self.bindings['messageEndTime']['@type'])
+        act_string = """
+<{0}> a prov:Activity ;{1}{2}
+    prtr:activityName "{3}" ;
+    prtr:activitySource "{4}" .
+
+<{0}> prov:wasAssociatedWith <{5}> .""".format(self.bindings['message']["@id"],
+                                                       start_time_line,
+                                                       end_time_line,
                                                        self.bindings['activityName']["@value"],
                                                        self.bindings['moduleName']["@value"],
                                                        self.agent_id)

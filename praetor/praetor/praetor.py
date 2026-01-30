@@ -94,9 +94,9 @@ def get_non_builtin_modules_versions():
     stdlib_modules = get_stdlib_modules()
     modules_versions = {}
 
-    mod_dict = sys.modules.items()
+    mod_dict = dict(sys.modules)
 
-    for name, module in mod_dict:
+    for name, module in mod_dict.items():
         if (module is not None and
             name not in builtin_modules and
             name not in stdlib_modules and
@@ -313,7 +313,7 @@ class CallTracer:
             out_value = f"<callable {name}>"
             prov_type = 'string'
         else:
-            out_value = reprlib.repr(value)
+            out_value = reprlib.repr(value) # truncating the value, need to not do that
             out_value = self.remove_quotes_from_string(out_value)
             try:
                 out_type = type(value).__name__

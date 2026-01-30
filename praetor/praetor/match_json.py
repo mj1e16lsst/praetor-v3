@@ -95,6 +95,7 @@ def read_pairs_adaptive_return(file_path, output_path, line_index_dict):
                 call_line = info["call"]
                 if call_line in lines_cache:
                     json_line = json.loads(lines_cache[call_line])["@data"]
+                    json_line["messageEndTime"] = {"@type": "xsd:dateTime", "@value": "-"}
                     result_line = json_line
                 else:
                     result_line = "MISSING_LINE_DATA"
@@ -103,6 +104,7 @@ def read_pairs_adaptive_return(file_path, output_path, line_index_dict):
                 return_line = info["return"]
                 if return_line in lines_cache:
                     json_line = json.loads(lines_cache[return_line])["@data"]
+                    json_line["messageStartTime"] = {"@type": "xsd:dateTime", "@value": "-"}
                     result_line = json_line
                 else:
                     result_line = "MISSING_LINE_DATA"
