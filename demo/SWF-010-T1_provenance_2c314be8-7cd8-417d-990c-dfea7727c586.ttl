@@ -1,0 +1,1129 @@
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix run: <http://example.org/> .
+@prefix urn_uuid: <urn:uuid:> .
+@prefix ivoa: <https://www.ivoa.net/documents/ProvenanceDM/20200411/Provenance.html> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix var: <http://openprovenance.org/var#> .
+@prefix prtr: <http://example.org/> .
+@prefix pyth: <https://pypi.org/project/> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> a prov:Agent ;
+    prtr:pythonVersion "3.10.18" ;
+    pyth:math "None" ;
+    pyth:binascii "None" ;
+    pyth:cython_runtime "None" ;
+    pyth:yaml "6.0.3" ;
+    pyth:zlib "1.0" ;
+    pyth:fcntl "None" ;
+    pyth:select "None" ;
+    pyth:packaging "25.0" ;
+    pyth:numpy "1.26.4" ;
+    pyth:PIL "10.1.0" ;
+    pyth:cffi "2.0.0" ;
+    pyth:array "None" ;
+    pyth:pyparsing "3.2.5" ;
+    pyth:cycler "0.12.1" ;
+    pyth:dateutil "2.9.0.post0" ;
+    pyth:kiwisolver "1.4.9" ;
+    pyth:matplotlib "3.10.3" ;
+    pyth:pyexpat "None" ;
+    pyth:unicodedata "None" ;
+    pyth:six "1.17.0" ;
+    pyth:mpl_toolkits "None" ;
+    pyth:Cython "3.1.4" ;
+    pyth:cython "3.1.4" ;
+    pyth:scipy "1.15.3" ;
+    pyth:astropy "6.1.7" ;
+    pyth:mmap "None" ;
+    pyth:certifi "2025.10.05" ;
+    pyth:astropy_iers_data "0.2025.10.13.0.37.17" ;
+    pyth:msgpack "1.1.2" ;
+    pyth:numcodecs "0.13.1" ;
+    pyth:cmath "None" ;
+    pyth:toolz "1.0.0" ;
+    pyth:tlz "1.0.0" ;
+    pyth:importlib_metadata "None" ;
+    pyth:zipp "None" ;
+    pyth:cloudpickle "3.1.1" ;
+    pyth:markupsafe "3.0.3" ;
+    pyth:jinja2 "3.1.6" ;
+    pyth:dask "2025.9.1" ;
+    pyth:pyfftw "0.15.0" ;
+    pyth:bdsf "1.13.0.post2" ;
+    pyth:pytz "2025.2" ;
+    pyth:numexpr "2.14.1" ;
+    pyth:grp "None" ;
+    pyth:pandas "2.1.1" ;
+    pyth:erfa "2.0.1.5" ;
+    pyth:termios "None" .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521456448> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.347499"^^xsd:dateTime ;
+
+    prtr:activityName "main" ;
+    prtr:activitySource "__main__" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521456448> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203091742864> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.347784"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.347829"^^xsd:dateTime ;
+
+    prtr:activityName "exists" ;
+    prtr:activitySource "genericpath" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203091742864> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:d7edb7392d425077432a8d33b41c36d80aced57a6124a8077b0946df706f4eab> a prov:Entity ;
+    prov:value "../../data//...10-T1/interim"^^xsd:string .
+
+_:blank0 a prov:Usage ;
+    prov:entity <run:d7edb7392d425077432a8d33b41c36d80aced57a6124a8077b0946df706f4eab> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203091742864> prov:qualifiedUsage _:blank0 . 
+
+_:blank0 prov:hadRole "path" .
+        
+<run:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b> a prov:Entity ;
+    prov:value "True"^^xsd:boolean .
+
+<run:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203091742864> .
+_:blank1 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203091742864> prov:qualifiedStart _:blank1 .
+
+_:blank1 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203091742864> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202185623424> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.347875"^^xsd:dateTime ;
+
+    prtr:activityName "process_image" ;
+    prtr:activitySource "bdsf" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202185623424> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:36d573d0acaae26fb32c176403708e8025eb93d5dc418d86fa40313035bef63f> a prov:Entity ;
+    prov:value "../../data//...-blanked.fits"^^xsd:string .
+
+_:blank2 a prov:Usage ;
+    prov:entity <run:36d573d0acaae26fb32c176403708e8025eb93d5dc418d86fa40313035bef63f> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202185623424> prov:qualifiedUsage _:blank2 . 
+
+_:blank2 prov:hadRole "input" .
+        
+_:blank3 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203091742864> prov:qualifiedStart _:blank3 .
+
+_:blank3 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202185623424> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633329024> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348239"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.348274"^^xsd:dateTime ;
+
+    prtr:activityName "parent" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633329024> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:3f7e10555667f61ae092776b0d39e4cfa478f9230bdd1e458a9d1a7e03313dd6> a prov:Entity ;
+    prov:value "ModuleSpec(na...interface.py)"^^xsd:string .
+
+_:blank4 a prov:Usage ;
+    prov:entity <run:3f7e10555667f61ae092776b0d39e4cfa478f9230bdd1e458a9d1a7e03313dd6> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633329024> prov:qualifiedUsage _:blank4 . 
+
+_:blank4 prov:hadRole "self" .
+        
+<run:5bea97e695ffb0afea2710ac67f316e158da109ad53b00851873e7baf04ad864> a prov:Entity ;
+    prov:value "bdsf"^^xsd:string .
+
+<run:5bea97e695ffb0afea2710ac67f316e158da109ad53b00851873e7baf04ad864> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633329024> .
+_:blank5 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633329024> prov:qualifiedStart _:blank5 .
+
+_:blank5 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633329024> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_520393936> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348128"^^xsd:dateTime ;
+
+    prtr:activityName "load_pars" ;
+    prtr:activitySource "bdsf.interface" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_520393936> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:36d573d0acaae26fb32c176403708e8025eb93d5dc418d86fa40313035bef63f> a prov:Entity ;
+    prov:value "../../data//...-blanked.fits"^^xsd:string .
+
+_:blank6 a prov:Usage ;
+    prov:entity <run:36d573d0acaae26fb32c176403708e8025eb93d5dc418d86fa40313035bef63f> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_520393936> prov:qualifiedUsage _:blank6 . 
+
+_:blank6 prov:hadRole "filename" .
+        
+_:blank7 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633329024> prov:qualifiedStart _:blank7 .
+
+_:blank7 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_520393936> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521476016> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348318"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.348382"^^xsd:dateTime ;
+
+    prtr:activityName "_handle_fromlist" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521476016> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:140203632138880> a prov:Entity ;
+    prov:value "<callable bdsf>"^^xsd:string .
+
+_:blank8 a prov:Usage ;
+    prov:entity <run:140203632138880> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521476016> prov:qualifiedUsage _:blank8 . 
+
+_:blank8 prov:hadRole "module" .
+        
+<run:ac49d729a06ce4602ee1280822ae488d740b7d9f4ad3e1db1191e8b935baebda> a prov:Entity ;
+    prov:value "(mylogger,)"^^xsd:string .
+
+_:blank9 a prov:Usage ;
+    prov:entity <run:ac49d729a06ce4602ee1280822ae488d740b7d9f4ad3e1db1191e8b935baebda> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521476016> prov:qualifiedUsage _:blank9 . 
+
+_:blank9 prov:hadRole "fromlist" .
+        
+<run:cd26d32e95133a66e5d818ed40a29cf91670f811f11fab53de4b7af55542942a> a prov:Entity ;
+    prov:value "<callable __import__>"^^xsd:string .
+
+_:blank10 a prov:Usage ;
+    prov:entity <run:cd26d32e95133a66e5d818ed40a29cf91670f811f11fab53de4b7af55542942a> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521476016> prov:qualifiedUsage _:blank10 . 
+
+_:blank10 prov:hadRole "import_" .
+        
+<run:140203632138880> a prov:Entity ;
+    prov:value "<callable bdsf>"^^xsd:string .
+
+<run:140203632138880> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521476016> .
+_:blank11 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633329024> prov:qualifiedStart _:blank11 .
+
+_:blank11 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521476016> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202228707584> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348447"^^xsd:dateTime ;
+
+    prtr:activityName "_find_and_load" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202228707584> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank12 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202228707584> prov:qualifiedUsage _:blank12 . 
+
+_:blank12 prov:hadRole "name" .
+        
+<run:cd26d32e95133a66e5d818ed40a29cf91670f811f11fab53de4b7af55542942a> a prov:Entity ;
+    prov:value "<callable __import__>"^^xsd:string .
+
+_:blank13 a prov:Usage ;
+    prov:entity <run:cd26d32e95133a66e5d818ed40a29cf91670f811f11fab53de4b7af55542942a> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202228707584> prov:qualifiedUsage _:blank13 . 
+
+_:blank13 prov:hadRole "import_" .
+        
+_:blank14 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_521476016> prov:qualifiedStart _:blank14 .
+
+_:blank14 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202228707584> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331520> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348478"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.348517"^^xsd:dateTime ;
+
+    prtr:activityName "__init__" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331520> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:d504868a12ac8f493204c65a67b64daaa3c7f2d41be009d964c0108cf4f120a7> a prov:Entity ;
+    prov:value "<_frozen_impo...x7f835d9d5390>"^^xsd:string .
+
+_:blank15 a prov:Usage ;
+    prov:entity <run:d504868a12ac8f493204c65a67b64daaa3c7f2d41be009d964c0108cf4f120a7> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331520> prov:qualifiedUsage _:blank15 . 
+
+_:blank15 prov:hadRole "self" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank16 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331520> prov:qualifiedUsage _:blank16 . 
+
+_:blank16 prov:hadRole "name" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331520> .
+_:blank17 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202228707584> prov:qualifiedStart _:blank17 .
+
+_:blank17 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331520> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149568> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348566"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.348890"^^xsd:dateTime ;
+
+    prtr:activityName "__enter__" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149568> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:094f33c395a9a7555df1bdc8443304c3abca64278027094e7465bcec4f04ac32> a prov:Entity ;
+    prov:value "<_frozen_impo...x7f835d9d5390>"^^xsd:string .
+
+_:blank18 a prov:Usage ;
+    prov:entity <run:094f33c395a9a7555df1bdc8443304c3abca64278027094e7465bcec4f04ac32> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149568> prov:qualifiedUsage _:blank18 . 
+
+_:blank18 prov:hadRole "self" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149568> .
+_:blank19 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331520> prov:qualifiedStart _:blank19 .
+
+_:blank19 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149568> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361424> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348597"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.348729"^^xsd:dateTime ;
+
+    prtr:activityName "_get_module_lock" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361424> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank20 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361424> prov:qualifiedUsage _:blank20 . 
+
+_:blank20 prov:hadRole "name" .
+        
+<run:140202188620080> a prov:Entity ;
+    prov:value "_ModuleLock(...40202188620080"^^xsd:string .
+
+<run:140202188620080> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361424> .
+_:blank21 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149568> prov:qualifiedStart _:blank21 .
+
+_:blank21 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361424> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331936> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348624"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.348673"^^xsd:dateTime ;
+
+    prtr:activityName "__init__" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331936> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:745b9cd2bf1de9d0c77bbe08458e811c80b7a44a244b03b7abc3b8a39ba0ee27> a prov:Entity ;
+    prov:value "<_ModuleLock instance at 0x7f835da64130>"^^xsd:string .
+
+_:blank22 a prov:Usage ;
+    prov:entity <run:745b9cd2bf1de9d0c77bbe08458e811c80b7a44a244b03b7abc3b8a39ba0ee27> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331936> prov:qualifiedUsage _:blank22 . 
+
+_:blank22 prov:hadRole "self" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank23 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331936> prov:qualifiedUsage _:blank23 . 
+
+_:blank23 prov:hadRole "name" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331936> .
+_:blank24 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361424> prov:qualifiedStart _:blank24 .
+
+_:blank24 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633331936> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361888> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348779"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.348843"^^xsd:dateTime ;
+
+    prtr:activityName "acquire" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361888> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:140202188620080> a prov:Entity ;
+    prov:value "_ModuleLock(...40202188620080"^^xsd:string .
+
+_:blank25 a prov:Usage ;
+    prov:entity <run:140202188620080> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361888> prov:qualifiedUsage _:blank25 . 
+
+_:blank25 prov:hadRole "self" .
+        
+<run:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b> a prov:Entity ;
+    prov:value "True"^^xsd:boolean .
+
+<run:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361888> .
+_:blank26 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361424> prov:qualifiedStart _:blank26 .
+
+_:blank26 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633361888> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202226431552> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348939"^^xsd:dateTime ;
+
+    prtr:activityName "_find_and_load_unlocked" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202226431552> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank27 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202226431552> prov:qualifiedUsage _:blank27 . 
+
+_:blank27 prov:hadRole "name" .
+        
+<run:cd26d32e95133a66e5d818ed40a29cf91670f811f11fab53de4b7af55542942a> a prov:Entity ;
+    prov:value "<callable __import__>"^^xsd:string .
+
+_:blank28 a prov:Usage ;
+    prov:entity <run:cd26d32e95133a66e5d818ed40a29cf91670f811f11fab53de4b7af55542942a> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202226431552> prov:qualifiedUsage _:blank28 . 
+
+_:blank28 prov:hadRole "import_" .
+        
+_:blank29 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149568> prov:qualifiedStart _:blank29 .
+
+_:blank29 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202226431552> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481476576> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.348978"^^xsd:dateTime ;
+
+    prtr:activityName "_find_spec" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481476576> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank30 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481476576> prov:qualifiedUsage _:blank30 . 
+
+_:blank30 prov:hadRole "name" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank31 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481476576> prov:qualifiedUsage _:blank31 . 
+
+_:blank31 prov:hadRole "path" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank32 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481476576> prov:qualifiedUsage _:blank32 . 
+
+_:blank32 prov:hadRole "target" .
+        
+_:blank33 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140202226431552> prov:qualifiedStart _:blank33 .
+
+_:blank33 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481476576> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.356225"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.356254"^^xsd:dateTime ;
+
+    prtr:activityName "__enter__" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:4d01b4060372bd297e6ccf7813080c1d6b2e77cd01f0401a8a01fe16150c4577> a prov:Entity ;
+    prov:value "<_frozen_impo...x7f835da64280>"^^xsd:string .
+
+_:blank34 a prov:Usage ;
+    prov:entity <run:4d01b4060372bd297e6ccf7813080c1d6b2e77cd01f0401a8a01fe16150c4577> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> prov:qualifiedUsage _:blank34 . 
+
+_:blank34 prov:hadRole "self" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> .
+_:blank35 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> prov:qualifiedStart _:blank35 .
+
+_:blank35 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.349099"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.349215"^^xsd:dateTime ;
+
+    prtr:activityName "find_spec" ;
+    prtr:activitySource "_distutils_hack" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:8a52c1da601fe2844278c08ee6bd5d821609b1ef85b3fe061078f44be39aa4e1> a prov:Entity ;
+    prov:value "<_distutils_h...x7f83b3ad2bc0>"^^xsd:string .
+
+_:blank36 a prov:Usage ;
+    prov:entity <run:8a52c1da601fe2844278c08ee6bd5d821609b1ef85b3fe061078f44be39aa4e1> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> prov:qualifiedUsage _:blank36 . 
+
+_:blank36 prov:hadRole "self" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank37 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> prov:qualifiedUsage _:blank37 . 
+
+_:blank37 prov:hadRole "fullname" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank38 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> prov:qualifiedUsage _:blank38 . 
+
+_:blank38 prov:hadRole "path" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank39 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> prov:qualifiedUsage _:blank39 . 
+
+_:blank39 prov:hadRole "target" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> .
+_:blank40 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> prov:qualifiedStart _:blank40 .
+
+_:blank40 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633429568> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.349165"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.349185"^^xsd:dateTime ;
+
+    prtr:activityName "<lambda>" ;
+    prtr:activitySource "_distutils_hack" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633429568> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633429568> .
+_:blank41 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633372096> prov:qualifiedStart _:blank41 .
+
+_:blank41 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633429568> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.356129"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.356175"^^xsd:dateTime ;
+
+    prtr:activityName "__exit__" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:4d01b4060372bd297e6ccf7813080c1d6b2e77cd01f0401a8a01fe16150c4577> a prov:Entity ;
+    prov:value "<_frozen_impo...x7f835da64220>"^^xsd:string .
+
+_:blank42 a prov:Usage ;
+    prov:entity <run:4d01b4060372bd297e6ccf7813080c1d6b2e77cd01f0401a8a01fe16150c4577> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> prov:qualifiedUsage _:blank42 . 
+
+_:blank42 prov:hadRole "self" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank43 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> prov:qualifiedUsage _:blank43 . 
+
+_:blank43 prov:hadRole "exc_type" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank44 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> prov:qualifiedUsage _:blank44 . 
+
+_:blank44 prov:hadRole "exc_value" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank45 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> prov:qualifiedUsage _:blank45 . 
+
+_:blank45 prov:hadRole "exc_traceback" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> .
+_:blank46 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> prov:qualifiedStart _:blank46 .
+
+_:blank46 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855648> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377792> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.349458"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.349509"^^xsd:dateTime ;
+
+    prtr:activityName "find_spec" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377792> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:de09b186dfebdbc709aa84f347b4a5931e0b4055643fca75486bbdd604e06c45> a prov:Entity ;
+    prov:value "<callable BuiltinImporter>"^^xsd:string .
+
+_:blank47 a prov:Usage ;
+    prov:entity <run:de09b186dfebdbc709aa84f347b4a5931e0b4055643fca75486bbdd604e06c45> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377792> prov:qualifiedUsage _:blank47 . 
+
+_:blank47 prov:hadRole "cls" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank48 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377792> prov:qualifiedUsage _:blank48 . 
+
+_:blank48 prov:hadRole "fullname" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank49 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377792> prov:qualifiedUsage _:blank49 . 
+
+_:blank49 prov:hadRole "path" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank50 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377792> prov:qualifiedUsage _:blank50 . 
+
+_:blank50 prov:hadRole "target" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377792> .
+_:blank51 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> prov:qualifiedStart _:blank51 .
+
+_:blank51 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377792> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633378240> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.349743"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.349790"^^xsd:dateTime ;
+
+    prtr:activityName "find_spec" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633378240> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:268429c72ae8250783309aebea29d3e2dbeed994d870c6c08e7781b891193b34> a prov:Entity ;
+    prov:value "<callable FrozenImporter>"^^xsd:string .
+
+_:blank52 a prov:Usage ;
+    prov:entity <run:268429c72ae8250783309aebea29d3e2dbeed994d870c6c08e7781b891193b34> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633378240> prov:qualifiedUsage _:blank52 . 
+
+_:blank52 prov:hadRole "cls" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank53 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633378240> prov:qualifiedUsage _:blank53 . 
+
+_:blank53 prov:hadRole "fullname" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank54 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633378240> prov:qualifiedUsage _:blank54 . 
+
+_:blank54 prov:hadRole "path" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank55 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633378240> prov:qualifiedUsage _:blank55 . 
+
+_:blank55 prov:hadRole "target" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633378240> .
+_:blank56 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> prov:qualifiedStart _:blank56 .
+
+_:blank56 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633378240> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.350030"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.356063"^^xsd:dateTime ;
+
+    prtr:activityName "find_spec" ;
+    prtr:activitySource "importlib._bootstrap_external" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:fd8141b01b6c6d695c9e77c8cb85533ba78b09b53ee0bfe8d4711005a7031248> a prov:Entity ;
+    prov:value "<callable PathFinder>"^^xsd:string .
+
+_:blank57 a prov:Usage ;
+    prov:entity <run:fd8141b01b6c6d695c9e77c8cb85533ba78b09b53ee0bfe8d4711005a7031248> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> prov:qualifiedUsage _:blank57 . 
+
+_:blank57 prov:hadRole "cls" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank58 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> prov:qualifiedUsage _:blank58 . 
+
+_:blank58 prov:hadRole "fullname" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank59 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> prov:qualifiedUsage _:blank59 . 
+
+_:blank59 prov:hadRole "path" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank60 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> prov:qualifiedUsage _:blank60 . 
+
+_:blank60 prov:hadRole "target" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> .
+_:blank61 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633149968> prov:qualifiedStart _:blank61 .
+
+_:blank61 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632740416> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.350075"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.355985"^^xsd:dateTime ;
+
+    prtr:activityName "_get_spec" ;
+    prtr:activitySource "importlib._bootstrap_external" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632740416> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:fd8141b01b6c6d695c9e77c8cb85533ba78b09b53ee0bfe8d4711005a7031248> a prov:Entity ;
+    prov:value "<callable PathFinder>"^^xsd:string .
+
+_:blank62 a prov:Usage ;
+    prov:entity <run:fd8141b01b6c6d695c9e77c8cb85533ba78b09b53ee0bfe8d4711005a7031248> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632740416> prov:qualifiedUsage _:blank62 . 
+
+_:blank62 prov:hadRole "cls" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank63 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632740416> prov:qualifiedUsage _:blank63 . 
+
+_:blank63 prov:hadRole "fullname" .
+        
+<run:0cdc91045d4cd5b7efdf53885f40dece45b47417556e383ba48291f160970ec6> a prov:Entity ;
+    prov:value "[/home/h14471...01/SWF-010-T1, /home/h14471...python310.zip, /home/h14471...ib/python3.10, /home/h14471...0/lib-dynload, /home/h14471...site-packages]"^^xsd:string .
+
+_:blank64 a prov:Usage ;
+    prov:entity <run:0cdc91045d4cd5b7efdf53885f40dece45b47417556e383ba48291f160970ec6> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632740416> prov:qualifiedUsage _:blank64 . 
+
+_:blank64 prov:hadRole "path" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank65 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632740416> prov:qualifiedUsage _:blank65 . 
+
+_:blank65 prov:hadRole "target" .
+        
+<run:30d2ad26dd932e467032f4e71bb15137436313599f164afd15b84155e0593b58> a prov:Entity ;
+    prov:value "ModuleSpec(na..._locations=[])"^^xsd:string .
+
+<run:30d2ad26dd932e467032f4e71bb15137436313599f164afd15b84155e0593b58> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632740416> .
+_:blank66 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632758592> prov:qualifiedStart _:blank66 .
+
+_:blank66 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632740416> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633346064> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.354507"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.354540"^^xsd:dateTime ;
+
+    prtr:activityName "_path_importer_cache" ;
+    prtr:activitySource "importlib._bootstrap_external" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633346064> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:fd8141b01b6c6d695c9e77c8cb85533ba78b09b53ee0bfe8d4711005a7031248> a prov:Entity ;
+    prov:value "<callable PathFinder>"^^xsd:string .
+
+_:blank67 a prov:Usage ;
+    prov:entity <run:fd8141b01b6c6d695c9e77c8cb85533ba78b09b53ee0bfe8d4711005a7031248> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633346064> prov:qualifiedUsage _:blank67 . 
+
+_:blank67 prov:hadRole "cls" .
+        
+<run:eb1caf95f703984a5297632215d3b342b702233e15eb951dcc9bcd03365296d0> a prov:Entity ;
+    prov:value "/home/h14471...site-packages"^^xsd:string .
+
+_:blank68 a prov:Usage ;
+    prov:entity <run:eb1caf95f703984a5297632215d3b342b702233e15eb951dcc9bcd03365296d0> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633346064> prov:qualifiedUsage _:blank68 . 
+
+_:blank68 prov:hadRole "path" .
+        
+<run:a544bea9bc49cb4562920c4360cbfccea9bdb8cdd0ddeaedd1406a1ba155aa3e> a prov:Entity ;
+    prov:value "FileFinder(/...ite-packages)"^^xsd:string .
+
+<run:a544bea9bc49cb4562920c4360cbfccea9bdb8cdd0ddeaedd1406a1ba155aa3e> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633346064> .
+_:blank69 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> prov:qualifiedStart _:blank69 .
+
+_:blank69 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633346064> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.354658"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.355814"^^xsd:dateTime ;
+
+    prtr:activityName "find_spec" ;
+    prtr:activitySource "importlib._bootstrap_external" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:a544bea9bc49cb4562920c4360cbfccea9bdb8cdd0ddeaedd1406a1ba155aa3e> a prov:Entity ;
+    prov:value "FileFinder(/...ite-packages)"^^xsd:string .
+
+_:blank70 a prov:Usage ;
+    prov:entity <run:a544bea9bc49cb4562920c4360cbfccea9bdb8cdd0ddeaedd1406a1ba155aa3e> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> prov:qualifiedUsage _:blank70 . 
+
+_:blank70 prov:hadRole "self" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank71 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> prov:qualifiedUsage _:blank71 . 
+
+_:blank71 prov:hadRole "fullname" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank72 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> prov:qualifiedUsage _:blank72 . 
+
+_:blank72 prov:hadRole "target" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> .
+_:blank73 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633346064> prov:qualifiedStart _:blank73 .
+
+_:blank73 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633335680> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.354731"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.354763"^^xsd:dateTime ;
+
+    prtr:activityName "_path_stat" ;
+    prtr:activitySource "importlib._bootstrap_external" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633335680> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:eb1caf95f703984a5297632215d3b342b702233e15eb951dcc9bcd03365296d0> a prov:Entity ;
+    prov:value "/home/h14471...site-packages"^^xsd:string .
+
+_:blank74 a prov:Usage ;
+    prov:entity <run:eb1caf95f703984a5297632215d3b342b702233e15eb951dcc9bcd03365296d0> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633335680> prov:qualifiedUsage _:blank74 . 
+
+_:blank74 prov:hadRole "path" .
+        
+<run:a1ef94ab1b9748ef6eaa4d4700cbefd808b35582c61912b471d15764f4326e8e> a prov:Entity ;
+    prov:value "os.stat_resul...me=1769527321)"^^xsd:string .
+
+<run:a1ef94ab1b9748ef6eaa4d4700cbefd808b35582c61912b471d15764f4326e8e> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633335680> .
+_:blank75 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> prov:qualifiedStart _:blank75 .
+
+_:blank75 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633335680> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633427648> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.354809"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.354825"^^xsd:dateTime ;
+
+    prtr:activityName "_relax_case" ;
+    prtr:activitySource "importlib._bootstrap_external" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633427648> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa> a prov:Entity ;
+    prov:value "False"^^xsd:boolean .
+
+<run:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633427648> .
+_:blank76 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633335680> prov:qualifiedStart _:blank76 .
+
+_:blank76 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633427648> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633336096> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.355640"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.355734"^^xsd:dateTime ;
+
+    prtr:activityName "_path_join" ;
+    prtr:activitySource "importlib._bootstrap_external" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633336096> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:8513a45bc39533983ed974334561fe3f619c2296bb73c7b3c73145ad0e543dfb> a prov:Entity ;
+    prov:value "/home/h14471...s/cPickle.pyc"^^xsd:string .
+
+<run:8513a45bc39533983ed974334561fe3f619c2296bb73c7b3c73145ad0e543dfb> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633336096> .
+_:blank77 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855216> prov:qualifiedStart _:blank77 .
+
+_:blank77 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633336096> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632859104> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.355653"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.355683"^^xsd:dateTime ;
+
+    prtr:activityName "<listcomp>" ;
+    prtr:activitySource "importlib._bootstrap_external" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632859104> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:dcae8034869ce63fd7a8c27c6edb1205d701802ccc81c224bfa82b6907a10332> a prov:Entity ;
+    prov:value "<tuple_iterat...x7f835da642b0>"^^xsd:string .
+
+_:blank78 a prov:Usage ;
+    prov:entity <run:dcae8034869ce63fd7a8c27c6edb1205d701802ccc81c224bfa82b6907a10332> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632859104> prov:qualifiedUsage _:blank78 . 
+
+_:blank78 prov:hadRole ".0" .
+        
+<run:0790a23d51c9d2c94d09e4da2e07d905a24fbf0e6b1613519304825675da2bd7> a prov:Entity ;
+    prov:value "[/home/h14471...site-packages, cPickle.pyc]"^^xsd:string .
+
+<run:0790a23d51c9d2c94d09e4da2e07d905a24fbf0e6b1613519304825675da2bd7> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632859104> .
+_:blank79 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633336096> prov:qualifiedStart _:blank79 .
+
+_:blank79 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632859104> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855216> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.355763"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.355783"^^xsd:dateTime ;
+
+    prtr:activityName "_verbose_message" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855216> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:00e8dbc526388f57a7e0d7aa387839577fa9e6878858413794675647d95a8fae> a prov:Entity ;
+    prov:value "trying {}"^^xsd:string .
+
+_:blank80 a prov:Usage ;
+    prov:entity <run:00e8dbc526388f57a7e0d7aa387839577fa9e6878858413794675647d95a8fae> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855216> prov:qualifiedUsage _:blank80 . 
+
+_:blank80 prov:hadRole "message" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855216> .
+_:blank81 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633336096> prov:qualifiedStart _:blank81 .
+
+_:blank81 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203632855216> .
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377344> a prov:Activity ;
+    prov:startedAtTime "2026-01-27T15:22:42.355892"^^xsd:dateTime ;
+
+    prov:endedAtTime "2026-01-27T15:22:42.355937"^^xsd:dateTime ;
+
+    prtr:activityName "__init__" ;
+    prtr:activitySource "importlib._bootstrap" .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377344> prov:wasAssociatedWith <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586> .
+<run:29c3bd60d8409859227e1ef8c74690fc4da63baf3bc02e163999b7fa5a2b59a5> a prov:Entity ;
+    prov:value "<ModuleSpec instance at 0x7f835da64280>"^^xsd:string .
+
+_:blank82 a prov:Usage ;
+    prov:entity <run:29c3bd60d8409859227e1ef8c74690fc4da63baf3bc02e163999b7fa5a2b59a5> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377344> prov:qualifiedUsage _:blank82 . 
+
+_:blank82 prov:hadRole "self" .
+        
+<run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> a prov:Entity ;
+    prov:value "cPickle"^^xsd:string .
+
+_:blank83 a prov:Usage ;
+    prov:entity <run:910ad1df6a864be3fdf8ab22bd8c791df84fe03308e6c6bdd763544683d0c3b9> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377344> prov:qualifiedUsage _:blank83 . 
+
+_:blank83 prov:hadRole "name" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+_:blank84 a prov:Usage ;
+    prov:entity <run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377344> prov:qualifiedUsage _:blank84 . 
+
+_:blank84 prov:hadRole "loader" .
+        
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> a prov:Entity ;
+    prov:value "None"^^xsd:string .
+
+<run:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b> prov:wasGeneratedBy <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377344> .
+_:blank85 a prov:Start .
+
+<urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_481685584> prov:qualifiedStart _:blank85 .
+
+_:blank85 prov:hadActivity <urn_uuid:SWF-010-T1_provenance_2c314be8-7cd8-417d-990c-dfea7727c586_140203633377344> .
