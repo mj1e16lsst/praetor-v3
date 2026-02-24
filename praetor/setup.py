@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='praetor',
-      version='4.1',
+      version='4.11',
       python_requires='>=3.7',
       description='Automatic Generation of Provenance from Python3 Scripts',
       url='https://gitlab.mpcdf.mpg.de/PRAETOR/prov-PRAETOR_public/',
