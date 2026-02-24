@@ -1,10 +1,13 @@
 # prov-PRAETOR
 
+The repository contains the PRAETOR python package - a module for automatically generating PROV format provenance 
+for any input python file. PRAETOR records function level provenance; the inputs, outputs, timing, names, origins, and
+links between any function executed within the python script. Note, function executions that happen outside of python 
+such as bootstrapped functions or calls made in software that exist outside of python will not be recorded.
+
+For a detailed example of generation, visualisation, and querying of the provenance please see the [demo notebook](https://github.com/mj1e16lsst/praetor-v3/blob/main/demo/ska-test-case-demo.ipynb)
+
 ## Installation
-
-The software suite has been organised in three parts that are separated in individual directories. 
-
-Please keep in mind that PRAETOR is a software suite that automatically documents the processing of a python workflow. However in practise you may have already a workflow or pipeline in a running environment (conda or container). In that case you want to install the provenance\-generation software within that environment and may want to investigate the provenance information outside that environment.
 
 All the software can be installed using the following command:
 
@@ -53,6 +56,3 @@ The following command should be used to merge the two files and transform into t
 
 ```create_tt.py --main main_file_name.json --agent agent_json.json```
 
-## Examples
-
-For a detailed example of generation, transformation, and querying please see the notebooks [here](https://github.com/mj1e16lsst/praetor-v3/blob/main/demo/ska-test-case-demo.ipynb)
