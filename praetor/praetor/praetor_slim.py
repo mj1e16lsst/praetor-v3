@@ -17,7 +17,7 @@ def get_output_directory():
 
 
 out_dir = get_output_directory()
-tracer = CallTracer(output_directory=out_dir, slim=True)
+tracer = CallTracer(output_directory=out_dir, slim=True, process_monitor=True)
 sys.setprofile(tracer)
 
 atexit.register(tracer.close)

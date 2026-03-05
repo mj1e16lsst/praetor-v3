@@ -10,6 +10,6 @@ setup(name='praetor',
       license='MIT',
       packages=['praetor'],
       install_requires=['pandas', 'prov', 'requests'],
-      scripts=["bin/create_ttl.py"],
+      scripts=[],
       zip_safe=False)
 
