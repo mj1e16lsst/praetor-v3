@@ -16,11 +16,16 @@ REPOSITORY_ID = os.environ.get('REPOSITORY_ID', 'ds')
 SPARQL_REST_URL = DATABASE_HOST_URL + REPOSITORY_ID
 
 prefixes = '''
-        PREFIX prov: <http://www.w3.org/ns/prov#>
-        PREFIX run: <http://example.org/>
-        PREFIX exe: <http://example.org/>
-        PREFIX prtr: <https://praetor.pages.mpcdf.de/praetor_provenance/>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX run: <http://example.org/>
+PREFIX urn_uuid: <urn:uuid:>
+PREFIX ivoa: <https://www.ivoa.net/documents/ProvenanceDM/20200411/Provenance.html>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX var: <http://openprovenance.org/var#>
+PREFIX prtr: <http://example.org/> 
+PREFIX pyth: <https://pypi.org/project/> 
 '''
 
 prefix_dict = {'http://www.w3.org/ns/prov#': 'prov:',
@@ -137,7 +142,7 @@ def user_defined_query(query):
     df = result_to_df(res)
     return df
 
-def modules_query(prov_name):
+def modules_query(prov_name, prefixes=prefixes):
     '''
     Function to return module names and versions
     :param prov_name: name of provenance graph
@@ -161,7 +166,7 @@ GRAPH ?g {
     return df
 
 
-def track_functions(prov_name, input_name=None, output_name=None, function_id=None, trace_back=True):
+def track_functions(prov_name, input_name=None, output_name=None, function_id=None, trace_back=True, prefixes=prefixes):
     '''
     Determine what functions have executed before or after a given input value, output value, or function id.
     Note, values may appear more than once, in this case the first instance is always used.
@@ -170,6 +175,7 @@ def track_functions(prov_name, input_name=None, output_name=None, function_id=No
     :param output_name:
     :param function_id:
     :param trace_back:
+    :param prefixes:
     :return:
     '''
     if input_name:
@@ -246,3 +252,112 @@ def track_functions(prov_name, input_name=None, output_name=None, function_id=No
         df_filtered = all_times[all_times['start.value'] >= date_time_mine]
 
     return df_filtered
+
+def function_query(prov_name, prefixes=prefixes, group_by=None):
+    """
+
+    :param prov_name:
+    :param prefixes:
+    :param group_by:
+    :return:
+    """
+
+    query = prefixes + '''
+    SELECT ?funcID ?funcName ?inputNames ?inputValues ?outputValues 
+
+    FROM NAMED <''' + prov_name + '''>
+    WHERE {
+    GRAPH ?g {
+    
+    ?funcID a prov:Activity;
+        prtr:activityName ?funcName .
+        
+    OPTIONAL {
+    ?b prov:entity ?inputID .
+    ?funcID prov:qualifiedUsage ?b .
+    ?b prov:hadRole ?inputNames .
+    ?inputID prov:value ?inputValues .
+    }
+    
+    OPTIONAL {
+    ?outputID prov:wasGeneratedBy ?funcID .
+    ?outputID prov:value ?outputValues . 
+    }
+    }
+    }
+    '''
+
+    full_data_frame = user_defined_query(query)
+
+    if group_by:
+        groups = full_data_frame[full_data_frame["funcName.value"] == group_by]
+    else:
+        groups = full_data_frame.sort_values(by="funcName.value", ascending=False)
+
+    return groups
+
+
+def module_query(prov_name, module_name, prefixes=prefixes):
+    """
+
+    :param prov_name:
+    :param module_name:
+    :param prefixes:
+    :return:
+    """
+
+    query = prefixes + '''
+    SELECT ?funcName ?funcID ?start ?end 
+
+    FROM NAMED <''' + prov_name + '''> 
+    WHERE {
+    GRAPH ?g {
+
+    ?funcID a prov:Activity ;
+        prtr:activityName ?funcName ;
+        prtr:activitySource "''' + module_name + '''" .
+
+    OPTIONAL {
+    ?funcID prov:startedAtTime ?start .
+    }
+
+    OPTIONAL {
+    ?funcID prov:endedAtTime ?end .
+    }
+
+    }
+    }
+
+    '''
+    full_data_frame = user_defined_query(query)
+    return full_data_frame
+
+
+def duration_query(prov_name, prefixes=prefixes):
+    query = prefixes + '''
+    SELECT ?start ?end ?funcName ?module
+
+    FROM NAMED <''' + prov_name + '''>
+    WHERE {
+    GRAPH ?g {
+
+    ?funcID a prov:Activity ;
+            prtr:activityName ?funcName ;
+            prtr:activitySource ?module .
+
+
+        ?funcID prov:startedAtTime ?start .
+
+
+
+        ?funcID prov:endedAtTime ?end .
+
+
+        }
+        }
+    '''
+    df = user_defined_query(query)
+    duration = df[['start.value', 'end.value']] = df[['start.value', 'end.value']].apply(pd.to_datetime)
+    df['time_diff'] = df['end.value'] - df['start.value']
+    df["diff_sec"] = df["time_diff"] / pd.Timedelta(seconds=1)
+    return df

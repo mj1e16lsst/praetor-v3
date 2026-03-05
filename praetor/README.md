@@ -35,7 +35,7 @@ The database will now be available at localhost:3030
 
 Add the praetor tracer to the start of your script (after imports)
 
-ouput_directory - where the provenance will be generated
+output_directory - where the provenance will be generated
 block_list_mod - is a list of modules which will be ignored by the provenance tracker
 
 

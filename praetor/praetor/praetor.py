@@ -7,11 +7,20 @@ import uuid
 import json
 import sys
 import os
+import shutil
 import sysconfig
 import reprlib
 
 import hashlib
 import pickle
+
+from praetor.transform_output import create_full_json
+
+custom_repr = reprlib.Repr()
+custom_repr.maxlist = 80
+custom_repr.maxdict = 40
+custom_repr.maxstring = 1024
+custom_repr.maxlevel = 3  # nesting depth
 
 
 def get_caller_script_name():
@@ -49,13 +58,18 @@ def get_modules(pipeline_id, out_directory, modules):
     bindings['var'].update(modules_pre)
     bindings['var']['python_version'] = py_version
     bindings['var']['lifeline'] = 'urn_uuid:{}'.format(pipeline_id)
+    bindings['var']['run_cmd'] = f"{sys.executable} {' '.join(sys.argv)}"
 
     json_dir = out_directory + '/json/'
 
     json_total['agent'] = bindings
 
-    with open(json_dir + 'agent_json.json', 'w') as f:
+    agent_json = json_dir + "agent_json.json"
+
+    with open(agent_json, 'w') as f:
         json.dump(json_total, f)
+
+    return agent_json
 
 
 def get_stdlib_modules():
@@ -116,15 +130,26 @@ class CallTracer:
 
     close_file_var = True
     out_handle = None
+    agent_json = None
 
     def __init__(self, output_directory="./output/", block_list_mod=None, block_list_func=None, cpython=False,
-                 bootstrap=False):
+                 bootstrap=False, store_large_values=False, only_main=False, slim=False):
+        """Setup for the CallTracer class
+        :param output_directory: Where generated provenance will be stored
+        :param block_list_mod: block_list of python modules
+        :param block_list_func: block_list of python functions
+        :param cpython: Whether to record provenance for cpython functions
+        :param bootstrap: Whether to record provenance for bootstrapped functions
+        :param store_large_values: Whether to store copies of large values as files"""
+
+        self.record_prov = True
 
         self.calls = {}
         self.session_id = generate_pipeline_id()  # change praetor to name of pipeline
         self.prov_id_counter = Counter()
         self.prov_id_cache = dict()
 
+        self.store_large_values = store_large_values
         self.prefix = "run:"
         self.dtypes = {'int': 'int', 'unsignedInt': 'unsignedInt', 'hexBinary': 'hexBinary', 'NOTATION': 'NOTATION',
                   'nonPositiveInteger': 'nonPositiveInteger', 'float': 'float', 'ENTITY': 'ENTITY', 'bool': 'boolean',
@@ -150,8 +175,12 @@ class CallTracer:
         os.makedirs(self.out_directory + "big_entities/", exist_ok=True)
         self.out_handle = open(self.out_directory + "json/" + self.session_id + ".json", "a")
 
+        script_path = os.path.abspath(__file__)
+        script_name = script_path.split("/")[-1]
+        shutil.copy(script_path, self.out_directory + "{}_{}".format(self.session_id, script_name))
+
         mods = get_non_builtin_modules_versions()
-        get_modules(self.session_id, self.out_directory, mods)
+        self.agent_json = get_modules(self.session_id, self.out_directory, mods)
 
         self.last_activity = {"id": None, "end": None, "start": None, "name": None}
         self.activity_counter = {}
@@ -161,21 +190,44 @@ class CallTracer:
         self.block_list_func = block_list_func
         self.cpython = cpython
         self.bootstrap = bootstrap
+        self.only_main = only_main
+        self.slim = slim
+        self.prefixes = ("_", "<")
 
     def __call__(self, frame, event, arg):
-
+        """Method to record metadata for each python call event
+        :param frame: Python frame
+        :param event: Type of frame
+        :param arg: Argument of frame
+        :returns self"""
 
         if event in ["call", "return"]:
             code = frame.f_code
             func_name = code.co_name
             module_name = frame.f_globals.get("__name__", None)
 
+            if self.only_main and module_name != "__main__":
+                return self
+
+            if self.slim:
+                if func_name.startswith(self.prefixes):
+                    return self
+                if "._" in module_name:
+                    return self
+
             if module_name == "praetor":
-                print("passing my mod")
+                # print("passing my mod")
+                return self
+
+            if "praetor" in module_name:
+                # print("passing module")
                 return self
             # #
             # Ignore module-level frames
             if func_name == "<module>":
+                return self
+
+            if not self.record_prov:
                 return self
 
             if self.bootstrap and module_name in ["importlib._bootstrap_external", "importlib._bootstrap"]:
@@ -193,17 +245,23 @@ class CallTracer:
                 if func_name in self.block_list_func:
                     return self
 
+            argcount = code.co_argcount
+            varnames = code.co_varnames
+
+
+            if self.slim and varnames[0] in ["cls", "self"]:
+                return self
+
+            inputs = {
+                varnames[i]: frame.f_locals.get(varnames[i])
+                for i in range(argcount)
+            }
 
             self.name = func_name
             self.module_name = module_name
             self.stack_id = str(id(frame))
 
-            argcount = code.co_argcount
-            varnames = code.co_varnames
-            inputs = {
-                varnames[i]: frame.f_locals.get(varnames[i])
-                for i in range(argcount)
-            }
+
             self.inputs = inputs
 
             if event == "call":
@@ -266,17 +324,25 @@ class CallTracer:
 
     @staticmethod
     def date_time_stamp():
+        """Generate current date and time stamp
+        :returns: date and time stamp """
         date_time = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')
         return date_time
 
     @staticmethod
     def remove_quotes_from_string(in_string):
+        """Remove quotes from a string
+        :param in_string: input string
+        :returns in_string without quotes (out_string)"""
         out_string = [x for x in in_string if x not in ['"', "'"]]
         out_string = ''.join(out_string)
         return out_string
 
     @staticmethod
     def generate_persistent_id(obj):
+        """Generate persistent id for python objects so that they are consistent across runs
+        :param obj: python object
+        :return: persistent id """
         try:
             # Try to serialize to JSON, for JSON serializable objects
             serialized = json.dumps(obj, sort_keys=True).encode('utf-8')
@@ -306,15 +372,28 @@ class CallTracer:
 
         return prov_id
 
-    def find_type(self, value):
+    def find_type(self, value, value_id):
+        """Determine the type of any input python object
+        :param value: Input python object
+        :param value_id: ID of the input python object
+        :return: Type and truncated string representation of the input python object
+        """
         # mod_list = self.praetor_settings_dict["modules"] # need to get from some place, probably enviro var
         if callable(value) or inspect.ismodule(value) or inspect.isclass(value):#  or type(value).__module__ in mod_list:
             name = getattr(value, '__name__', None)
             out_value = f"<callable {name}>"
             prov_type = 'string'
         else:
-            out_value = reprlib.repr(value) # truncating the value, need to not do that
+            out_value = custom_repr.repr(value) # truncating the value, need to not do that
+            try:
+                out_value_full = json.dumps(value, ensure_ascii=False)
+            except (TypeError, OverflowError):
+                out_value_full = out_value
             out_value = self.remove_quotes_from_string(out_value)
+            # print(out_value, out_value_full)
+            if self.store_large_values:
+                if len(out_value_full) > 1024:
+                    self.large_object_handling(out_value_full, value_id)
             try:
                 out_type = type(value).__name__
                 if out_type in self.dtypes.keys():
@@ -326,7 +405,12 @@ class CallTracer:
         return out_value, prov_type
 
     def large_object_handling(self, value, object_id):
-        file_name = self.out_directory + "/big_entities/{}.json".format(object_id)
+        """Save large entities to file to save on provenance size
+        :param value: Value of object to save
+        :param object_id: ID of object to save
+        :return: Name of file which was dumped to
+        """
+        file_name = self.out_directory + "/big_entities/{}.json".format(object_id.split(":")[1])
 
         if not os.path.isfile(file_name):
             with open(file_name, "w") as f:
@@ -335,6 +419,7 @@ class CallTracer:
         return file_name
 
     def track_call(self):
+        """Trace the python stack to determine if a function was called by another"""
         stack = inspect.stack()
         caller = 'main'
         for frame in stack:
@@ -346,13 +431,7 @@ class CallTracer:
         return caller
 
     def prov_call_in(self):
-        # try:
-        #     self.activity_counter[self.name] += 1
-        #     identifier = self.name + "_{}".format(self.activity_counter[self.name])
-        # except KeyError:
-        #     self.activity_counter[self.name] = 0
-        #     identifier = self.name + "_{}".format(self.activity_counter[self.name])
-
+        """Format call metadata into json format provenance"""
         self.bindings['{}'.format(self.stack_id)] = {}
         self.bindings['{}'.format(self.stack_id)]['messageStartTime'] = {"@type": "xsd:dateTime", "@value": self.start_time}
         self.bindings['{}'.format(self.stack_id)]['moduleName'] = {"@type": "xsd:string", "@value": self.module_name}
@@ -370,14 +449,11 @@ class CallTracer:
 
         counter = 0
         for key, value in self.inputs.items():
-            in_value, in_type = self.find_type(value)
             in_id = self.generate_persistent_id(value)
-            if len(in_value) > 1024:
-                in_value = self.large_object_handling(in_value, in_id)
+            in_value, in_type = self.find_type(value, self.prefix + in_id)
             self.bindings['{}'.format(self.stack_id)]['input_{}'.format(counter)] = {'@id' : self.prefix + in_id, '@value': in_value,
                                                                      '@type': "xsd:{}".format(in_type), '@role': key}
             counter += 1
-        # end time need to be recorded after function execution
 
         self.last_activity['id'] = self.stack_id
         self.last_activity['name'] = self.name
@@ -386,7 +462,7 @@ class CallTracer:
 
 
     def prov_call_out(self):
-
+        """Format return metadata into json format provenance"""
         self.bindings['{}'.format(self.stack_id)] = {}
         self.bindings['{}'.format(self.stack_id)]['messageEndTime'] = {"@type": "xsd:dateTime", "@value": self.end_time}
         self.bindings['{}'.format(self.stack_id)]['moduleName'] = {"@type": "xsd:string",
@@ -397,10 +473,8 @@ class CallTracer:
 
         counter = 0
         for key, value in self.inputs.items():
-            in_value, in_type = self.find_type(value)
             in_id = self.generate_persistent_id(value)
-            if len(in_value) > 1024:
-                in_value = self.large_object_handling(in_value, in_id)
+            in_value, in_type = self.find_type(value, self.prefix + in_id)
             self.bindings['{}'.format(self.stack_id)]['input_{}'.format(counter)] = {'@id': self.prefix + in_id,
                                                                                      '@value': in_value,
                                                                                      '@type': "xsd:{}".format(
@@ -410,24 +484,11 @@ class CallTracer:
         output_list = [self.output]
         if output_list:
             for i, output_item in enumerate(output_list):
-                out_value, out_type = self.find_type(output_item)
-                # print(out_value)
                 out_id = self.generate_persistent_id(output_item)
-                if len(out_value) > 1024:
-                    out_value = self.large_object_handling(out_value, out_id)
+                out_value, out_type = self.find_type(output_item, self.prefix + out_id)
                 self.bindings['{}'.format(self.stack_id)]['output_{}'.format(i)] = {
                     '@id': self.prefix + out_id, '@value': out_value,
                     '@type': "xsd:{}".format(out_type)}
-
-        output_list = [self.output]
-        if output_list:
-            for i, output_item in enumerate(output_list):
-                out_value, out_type = self.find_type(output_item)
-                out_id = self.generate_persistent_id(output_item)
-                if len(out_value) > 1024:
-                    out_value = self.large_object_handling(out_value, out_id)
-                self.bindings['{}'.format(self.stack_id)]['output_{}'.format(i)] = {'@id' : self.prefix + out_id, '@value': out_value,
-                                                                         '@type': "xsd:{}".format(out_type)}
 
         if self.last_activity['id']:
             self.bindings['{}'.format(self.stack_id)]['message2'] = {"@id": "urn_uuid:{}_{}".format(self.session_id, self.last_activity['id'])}
@@ -437,11 +498,18 @@ class CallTracer:
 
         self.last_activity['id'] = self.stack_id
         self.last_activity['name'] = self.name
-        self.last_activity['end'] = self.end_time
-        self.last_activity['start'] = self.start_time
-
+        try:
+            self.last_activity['end'] = self.end_time
+        except AttributeError:
+            self.last_activity['end'] = "-"
+        try:
+            self.last_activity['start'] = self.start_time
+        except AttributeError:
+            self.last_activity['start'] = "-"
 
     def dump_json(self, mode):
+        """dump json provenance to file
+        :param mode: call or return"""
         json_metadata = self.bindings.pop(self.stack_id, None)
         # print(json_metadata)
         new_json = {'@id': '{}'.format(self.stack_id), '@mode': mode, '@data': json_metadata}
@@ -450,23 +518,11 @@ class CallTracer:
         self.out_handle.flush()
 
 
-    def dump_json_no_pop(self):
-        try:
-            json_metadata = self.bindings[self.stack_id]
-            json_str = json.dumps(json_metadata)
-            self.out_handle.write(json_str + '\n')
-            self.out_handle.flush()
-        except KeyError:
-            print("no key found")
-            print(self.name)
-            print("full stacker", self.stack_id)
+    def close(self):
+        """Close json dump document at end of provenance generation"""
+        if self.close_file_var and self.out_handle:
+            self.record_prov = False
+            create_full_json(self.agent_json, self.out_handle.name)
+            self.out_handle.close()
+            self.close_file_var = False
 
-
-    @classmethod
-    def close_file(cls):
-        if cls.close_file_var and cls.out_handle:
-            cls.out_handle.close()
-            cls.file_handle = None
-
-
-# sys.settrace(tracer)
