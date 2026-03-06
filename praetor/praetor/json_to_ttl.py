@@ -53,8 +53,20 @@ class Converter:
         else:
             end_time_line = '\n    prov:endedAtTime "{0}"^^{1} ;\n'.format(self.bindings['messageEndTime']['@value'],
                                                                        self.bindings['messageEndTime']['@type'])
+        if "memory_call" in self.bindings:
+            memory_call_line = '\n    prtr:memoryCall "{0}"^^{1};'.format(self.bindings['memory_call']['@value'],self.bindings['memory_call']['@type'])
+        else:
+            memory_call_line = ''
+        if "memory_return" in self.bindings:
+            memory_return_line = '\n    prtr:memoryReturn "{0}"^^{1};'.format(self.bindings['memory_return']['@value'],self.bindings['memory_return']['@type'])
+        else:
+            memory_return_line = ''
+        if "file_access" in self.bindings:
+            file_access_line = '\n    prtr:fileAccess "{0}"^^{1};'.format(self.bindings['file_access']['@value'],self.bindings['file_access']['@type'])
+        else:
+            file_access_line = ''
         act_string = """
-<{0}> a prov:Activity ;{1}{2}
+<{0}> a prov:Activity ;{1}{2}{6}{7}{8}
     prtr:activityName "{3}" ;
     prtr:activitySource "{4}" .
 
@@ -63,7 +75,10 @@ class Converter:
                                                        end_time_line,
                                                        self.bindings['activityName']["@value"],
                                                        self.bindings['moduleName']["@value"],
-                                                       self.agent_id)
+                                                       self.agent_id,
+                                                       memory_call_line,
+                                                       memory_return_line,
+                                                       file_access_line)
         self.triple_string += act_string
 
     def generate_input_triple(self, input_object, activity_id):

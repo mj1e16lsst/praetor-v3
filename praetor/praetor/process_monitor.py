@@ -29,12 +29,12 @@ class DynamicProcessMonitor:
         self.monitor_thread = threading.Thread(target=monitor_loop, daemon=True)
         self.monitor_thread.start()
 
-    def high_freq_snapshot(self):
+    def high_freq_snapshot(self, function_name):
         """Take IMMEDIATE high-frequency snapshot during monitoring"""
         with self._lock:
-            return self._snapshot('high_freq')
+            return self._snapshot('high_freq', function_name)
 
-    def _snapshot(self, snapshot_type):
+    def _snapshot(self, snapshot_type, function_name):
         """Internal snapshot method"""
         snapshot = {
             'timestamp': time.time(),
@@ -57,7 +57,8 @@ class DynamicProcessMonitor:
             # Only track NEWLY opened files
             current_files = {f.path for f in open_files_list}
             newly_opened_files = sorted(current_files - self.file_history)
-            self.file_history.update(current_files)
+            if snapshot_type == 'high_freq':
+                self.file_history.update(current_files)
 
         except psutil.NoSuchProcess:
             pass
@@ -78,7 +79,7 @@ class DynamicProcessMonitor:
 
         snapshot['total_rss_mb'] = sum(p['rss_mb'] for p in snapshot['processes'].values())
         snapshot['process_count'] = len(snapshot['processes'])
-
+        snapshot['function_name'] = function_name
         self.stats.append(snapshot)
         return snapshot
 
