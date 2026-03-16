@@ -15,6 +15,7 @@ import hashlib
 import pickle
 
 from praetor.transform_output import create_full_json
+from praetor.process_monitor import DynamicProcessMonitor
 
 custom_repr = reprlib.Repr()
 custom_repr.maxlist = 80
@@ -133,7 +134,8 @@ class CallTracer:
     agent_json = None
 
     def __init__(self, output_directory="./output/", block_list_mod=None, block_list_func=None, cpython=False,
-                 bootstrap=False, store_large_values=False, only_main=False, slim=False):
+                 bootstrap=False, store_large_values=False, only_main=False, slim=False, monitor_interval=1.0,
+                 process_monitor=False):
         """Setup for the CallTracer class
         :param output_directory: Where generated provenance will be stored
         :param block_list_mod: block_list of python modules
@@ -143,6 +145,9 @@ class CallTracer:
         :param store_large_values: Whether to store copies of large values as files"""
 
         self.record_prov = True
+        self.process_monitor = process_monitor
+        if self.process_monitor:
+            self.monitor = DynamicProcessMonitor(base_interval=monitor_interval)
 
         self.calls = {}
         self.session_id = generate_pipeline_id()  # change praetor to name of pipeline
@@ -248,9 +253,9 @@ class CallTracer:
             argcount = code.co_argcount
             varnames = code.co_varnames
 
-
-            if self.slim and varnames[0] in ["cls", "self"]:
-                return self
+            if len(varnames) > 0:
+                if self.slim and varnames[0] in ["cls", "self"]:
+                    return self
 
             inputs = {
                 varnames[i]: frame.f_locals.get(varnames[i])
@@ -263,6 +268,12 @@ class CallTracer:
 
 
             self.inputs = inputs
+
+            if self.process_monitor:
+                process_stats = self.monitor.high_freq_snapshot(func_name)
+                self.process_count = process_stats["process_count"]
+                self.total_memory = process_stats["total_rss_mb"]
+                self.files_opened = process_stats["newly_opened_files"]
 
             if event == "call":
 
@@ -280,6 +291,9 @@ class CallTracer:
 
         elif event in ["c_call", "c_return"]:
 
+            if not self.cpython:
+                return self
+
             cfunc = arg
             key = str(id(cfunc))
             func_name = getattr(cfunc, "__name__", None)
@@ -292,11 +306,22 @@ class CallTracer:
             code = frame.f_code
             argcount = code.co_argcount
             varnames = code.co_varnames
+
+            if len(varnames) > 0:
+                if self.slim and varnames[0] in ["cls", "self"]:
+                    return self
+
             inputs = {
                 varnames[i]: frame.f_locals.get(varnames[i])
                 for i in range(argcount)
             }
             self.inputs = inputs
+
+            if self.process_monitor:
+                process_stats = self.monitor.high_freq_snapshot()
+                self.process_count = process_stats["process_count"]
+                self.total_memory = process_stats["total_rss_mb"]
+                self.files_opened = process_stats["newly_opened_files"]
 
             if self.cpython and event == "c_call":
                 self.start_time = self.date_time_stamp()
@@ -430,6 +455,23 @@ class CallTracer:
                 break
         return caller
 
+    def start_monitoring(self):
+        """Start continuous background monitoring"""
+        self.monitor.start()
+
+    def stop_monitoring(self):
+        """Stop continuous background monitoring"""
+        self.monitor.stop()
+
+    def get_full_trace(self):
+        """Get all trace data with memory snapshots"""
+        return self.monitor.get_stats()
+
+    def clear(self):
+        """Reset all data"""
+        self.metadata.clear()
+        self.monitor.clear()
+
     def prov_call_in(self):
         """Format call metadata into json format provenance"""
         self.bindings['{}'.format(self.stack_id)] = {}
@@ -437,7 +479,8 @@ class CallTracer:
         self.bindings['{}'.format(self.stack_id)]['moduleName'] = {"@type": "xsd:string", "@value": self.module_name}
         self.bindings['{}'.format(self.stack_id)]['activityName'] = {"@type": "xsd:string", "@value": self.name}
         self.bindings['{}'.format(self.stack_id)]['message'] = {"@id": "urn_uuid:{}_{}".format(self.session_id, self.stack_id)}
-
+        if self.process_monitor:
+            self.bindings['{}'.format(self.stack_id)]['memory_call'] = {"@type": "xsd:float", "@value": self.total_memory}
 
         # add gate to see if it is on the stack
         # stack_function = self.track_call()
@@ -470,6 +513,10 @@ class CallTracer:
         self.bindings['{}'.format(self.stack_id)]['activityName'] = {"@type": "xsd:string", "@value": self.name}
         self.bindings['{}'.format(self.stack_id)]['message'] = {
             "@id": "urn_uuid:{}_{}".format(self.session_id, self.stack_id)}
+        if self.process_monitor:
+            self.bindings['{}'.format(self.stack_id)]['memory_return'] = {"@type": "xsd:float", "@value": self.total_memory}
+            if len(self.files_opened) > 0:
+                self.bindings['{}'.format(self.stack_id)]['file_access'] = {"@type": "xsd:string", "@value": self.files_opened}
 
         counter = 0
         for key, value in self.inputs.items():
@@ -521,7 +568,10 @@ class CallTracer:
     def close(self):
         """Close json dump document at end of provenance generation"""
         if self.close_file_var and self.out_handle:
+            self.stop_monitoring()
             self.record_prov = False
+            with open(self.out_directory + "stats.txt", "w") as f:
+                f.write(str(self.monitor.get_stats()))
             create_full_json(self.agent_json, self.out_handle.name)
             self.out_handle.close()
             self.close_file_var = False

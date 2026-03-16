@@ -32,27 +32,37 @@ The database will now be available at localhost:3030
 
 ## Usage 
 
+To record and create the provenance for your python pipeline, simply import the module at the start of your script.
+There are multiple levels of granularity available for the provenance, the slim setting is recommended:
 
-Add the praetor tracer to the start of your script (after imports)
-
-output_directory - where the provenance will be generated
-block_list_mod - is a list of modules which will be ignored by the provenance tracker
-
-
-```
-from praetor.praetor import CallTracer
-import sys
-
-tracer = CallTracer(output_directory="./output",  block_list_mod=["numpy"])
-sys.setprofile(tracer)
+```python
+from praetor import praetor_slim
 ```
 
+This import will only record the core python functionality and excludes things such as:
+- dunder functions such as __init__
+- hidden functions (those which start with an underscore)
+- cpython funcitons 
 
-## Transformation
+After adding the import line, simply run your script as normal, e.g.:
 
-Once executed, the code will now create a json directory within the output directory and two files within that: the agent file and main file.
+```commandline
+python my_script.py
+```
 
-The following command should be used to merge the two files and transform into turtle format:
+After the script has run, the provenance output will be put in the run directory (to change the output location please 
+see the optional command line inputs). The output should include:
+- /json, the directory containing the JSON files created during the operation
+- /big_entities, the directory containing any large entities (deafult is larger than 1024 chars) if storing is enabled
+- my_scipt_provenance_uuid_flattend.json, final json format provenance file
+- my_script_provenance.ttl, final ttl format provenance file (for database upload)
+- A copy of the original script ran for reproducibility
 
-```create_tt.py --main main_file_name.json --agent agent_json.json```
+In addition to the praetor_slim module, there are also the praetor_complete and praetor_main_only modules.
+Both are used in the same way as slim i.e. importing the module at the start of your script.
+The praetor_complete module will record all python calls which may be useful in some instances but can quickly inflate
+the size of the provenance. The praetor_main_only module only records provenance for functions run from the main script
+and not for any imported modules, bootstrapped functions, or cpython functions. 
 
+### Command line options
+--praetor-output - designate directory to store output files
