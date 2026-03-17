@@ -1,4 +1,4 @@
-# prov-PRAETOR
+**# prov-PRAETOR
 
 The repository contains the PRAETOR python package - a module for automatically generating PROV format provenance 
 for any input python file. PRAETOR records function level provenance; the inputs, outputs, timing, names, origins, and
@@ -53,7 +53,7 @@ python my_script.py
 After the script has run, the provenance output will be put in the run directory (to change the output location please 
 see the optional command line inputs). The output should include:
 - /json, the directory containing the JSON files created during the operation
-- /big_entities, the directory containing any large entities (deafult is larger than 1024 chars) if storing is enabled
+- /big_entities, the directory containing any large entities (default is larger than 1024 chars) if storing is enabled
 - my_scipt_provenance_uuid_flattend.json, final json format provenance file
 - my_script_provenance.ttl, final ttl format provenance file (for database upload)
 - A copy of the original script ran for reproducibility
@@ -65,4 +65,10 @@ the size of the provenance. The praetor_main_only module only records provenance
 and not for any imported modules, bootstrapped functions, or cpython functions. 
 
 ### Command line options
---praetor-output - designate directory to store output files
+--praetor-output (designate directory to store output files, e.g. --praetor-output ./output)
+--praetor-function-blacklist (comma-separated list of function names to blacklist from tracking, e.g. --praetor-function-blacklist "func_a,func_b,func_c").
+--praetor-module-blacklist (comma-separated list of module names to blacklist from tracking, e.g. --praetor-module-blacklist "module_a,module_b").
+--praetor-save-big (whether to make copies of large values, Boolean, e.g. --praetor-save-big True).
+--praetor-cpython (whether to track CPython functions, Boolean, e.g. --praetor-cpython True).
+--praetor-bootstrap (whether to track bootstrapped functions, Boolean, e.g. --praetor-bootstrap False).
+--praetor-process-monitor (whether to enable process-level profiling/monitoring of functions, Boolean, e.g. --praetor-process-monitor True).
