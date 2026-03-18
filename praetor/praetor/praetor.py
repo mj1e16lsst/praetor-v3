@@ -269,13 +269,13 @@ class CallTracer:
 
             self.inputs = inputs
 
-            if self.process_monitor:
-                process_stats = self.monitor.high_freq_snapshot(func_name)
-                self.process_count = process_stats["process_count"]
-                self.total_memory = process_stats["total_rss_mb"]
-                self.files_opened = process_stats["newly_opened_files"]
-
             if event == "call":
+
+                if self.process_monitor:
+                    process_stats = self.monitor.high_freq_snapshot(func_name, 0.01)
+                    self.process_count = process_stats["process_count"]
+                    self.total_memory = process_stats["total_rss_mb"]
+                    self.files_opened = process_stats["newly_opened_files"]
 
                 self.start_time = self.date_time_stamp()
                 self.prov_call_in()
@@ -283,6 +283,13 @@ class CallTracer:
                 return self
 
             elif event == "return":
+
+                if self.process_monitor:
+                    process_stats = self.monitor.high_freq_snapshot(func_name, 1.0)
+                    self.process_count = process_stats["process_count"]
+                    self.total_memory = process_stats["total_rss_mb"]
+                    self.files_opened = process_stats["newly_opened_files"]
+
                 self.output = arg
                 self.end_time = self.date_time_stamp()
                 self.prov_call_out()

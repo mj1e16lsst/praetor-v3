@@ -24,13 +24,16 @@ class DynamicProcessMonitor:
             while self.running:
                 with self._lock:
                     self._snapshot('base')
-                time.sleep(self.base_interval)
+
+                interval = self.base_interval
+                time.sleep(interval)
 
         self.monitor_thread = threading.Thread(target=monitor_loop, daemon=True)
         self.monitor_thread.start()
 
-    def high_freq_snapshot(self, function_name):
+    def high_freq_snapshot(self, function_name, interval):
         """Take IMMEDIATE high-frequency snapshot during monitoring"""
+        self.base_interval = interval
         with self._lock:
             return self._snapshot('high_freq', function_name)
 
