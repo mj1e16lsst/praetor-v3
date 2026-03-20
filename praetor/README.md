@@ -66,9 +66,15 @@ and not for any imported modules, bootstrapped functions, or cpython functions.
 
 ### Command line options
 --praetor-output (designate directory to store output files, e.g. --praetor-output ./output)
+
 --praetor-function-blacklist (comma-separated list of function names to blacklist from tracking, e.g. --praetor-function-blacklist "func_a,func_b,func_c").
+
 --praetor-module-blacklist (comma-separated list of module names to blacklist from tracking, e.g. --praetor-module-blacklist "module_a,module_b").
+
 --praetor-save-big (whether to make copies of large values, Boolean, e.g. --praetor-save-big True).
+
 --praetor-cpython (whether to track CPython functions, Boolean, e.g. --praetor-cpython True).
+
 --praetor-bootstrap (whether to track bootstrapped functions, Boolean, e.g. --praetor-bootstrap False).
+
 --praetor-process-monitor (whether to enable process-level profiling/monitoring of functions, Boolean, e.g. --praetor-process-monitor True).
