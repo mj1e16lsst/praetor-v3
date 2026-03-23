@@ -78,3 +78,5 @@ and not for any imported modules, bootstrapped functions, or cpython functions.
 --praetor-bootstrap (whether to track bootstrapped functions, Boolean, e.g. --praetor-bootstrap False).
 
 --praetor-process-monitor (whether to enable process-level profiling/monitoring of functions, Boolean, e.g. --praetor-process-monitor True).
+
+--praetor-stack-depth (depth of python stack for praetor to document, int, e.g. --praetor-stack-depth 1)
