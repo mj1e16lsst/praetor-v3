@@ -5,6 +5,11 @@ import os
 import requests
 import subprocess
 
+import ast
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from datetime import datetime
+import numpy as np
 
 import pandas as pd
 from pandas import json_normalize
@@ -166,58 +171,25 @@ GRAPH ?g {
     return df
 
 
-def track_functions(prov_name, input_name=None, output_name=None, function_id=None, trace_back=True, prefixes=prefixes):
+def track_functions(prov_name, search_string, function_id=None, trace_back=True, prefixes=prefixes):
     '''
-    Determine what functions have executed before or after a given input value, output value, or function id.
-    Note, values may appear more than once, in this case the first instance is always used.
-    :param prov_name:
-    :param input_name:
-    :param output_name:
-    :param function_id:
-    :param trace_back:
-    :param prefixes:
-    :return:
+    Determine what functions have executed before or after a given input/output value or function id.
+    Searches for partial matches (contains) in input/output values.
+    Tries input first, then output if not found as input.
+
+    :param prov_name: Graph to search
+    :param search_string: String to search for in input/output values
+    :param function_id: Optional exact function ID
+    :param trace_back: If True, show functions before; False, show after
+    :param prefixes: SPARQL prefixes
+    :return: DataFrame of matching functions and times
     '''
-    if input_name:
-        find_ba = prefixes + '''
-        SELECT ?actID ?time
-        FROM NAMED <''' + prov_name + '''>
 
-        WHERE {
-        GRAPH ?g {
-
-        ?entityID prov:value "''' + input_name + '''" .
-        ?be prov:entity ?entityID .
-        ?actID prov:qualifiedUsage ?be .
-        ?ba prov:hadActivity ?actID .
-        ?actID prov:startedAtTime ?time .
-        }
-        }
-        '''
-        ba = user_defined_query(find_ba)
-        time = ba['time.value'][0]
-    elif output_name:
-        find_ba = prefixes + '''
-        SELECT ?actID ?time
-        FROM NAMED <''' + prov_name + '''>
-
-        WHERE {
-        GRAPH ?g {
-
-        ?entityID prov:value "''' + output_name + '''" .
-        ?entityID prov:wasGeneratedBy ?actID .
-        ?ba prov:hadActivity ?actID .
-        ?actID prov:startedAtTime ?time .
-        }
-        }
-        '''
-        ba = user_defined_query(find_ba)
-        time = ba['time.value'][0]
-    elif function_id:
+    # Try function_id first (exact match)
+    if function_id:
         find_ba = prefixes + '''
         SELECT ?time
         FROM NAMED <''' + prov_name + '''>
-
         WHERE {
         GRAPH ?g {
         <''' + function_id + '''> prov:startedAtTime ?time .
@@ -227,16 +199,55 @@ def track_functions(prov_name, input_name=None, output_name=None, function_id=No
         ba = user_defined_query(find_ba)
         time = ba['time.value'][0]
     else:
-        raise Exception("Input error, please enter a value for either the input_name, output_name, or function_id")
+        # Try input first (partial match using REGEX)
+        find_input = prefixes + '''
+        SELECT ?actID ?time
+        FROM NAMED <''' + prov_name + '''>
+        WHERE {
+        GRAPH ?g {
+        ?entityID prov:value ?value .
+        FILTER(regex(?value, "''' + search_string + '''", "i")) .
+        ?be prov:entity ?entityID .
+        ?actID prov:qualifiedUsage ?be .
+        ?ba prov:hadActivity ?actID .
+        ?actID prov:startedAtTime ?time .
+        }
+        }
+        '''
+        input_results = user_defined_query(find_input)
+
+        if not input_results.empty:
+            time = input_results['time.value'].iloc[0]  # First match
+        else:
+            # Try output (partial match)
+            find_output = prefixes + '''
+            SELECT ?actID ?time
+            FROM NAMED <''' + prov_name + '''>
+            WHERE {
+            GRAPH ?g {
+            ?entityID prov:value ?value .
+            FILTER(regex(?value, "''' + search_string + '''", "i")) .
+            ?entityID prov:wasGeneratedBy ?actID .
+            ?ba prov:hadActivity ?actID .
+            ?actID prov:startedAtTime ?time .
+            }
+            }
+            '''
+            output_results = user_defined_query(find_output)
+
+            if output_results.empty:
+                raise Exception(f"No matches found for '{search_string}' in inputs or outputs")
+
+            time = output_results['time.value'].iloc[0]  # First match
 
     date_time_mine = pd.to_datetime(time)
 
+    # Get all function timings
     get_all_timing = prefixes + '''
     SELECT ?start ?name
     FROM NAMED <''' + prov_name + '''>
     WHERE {
     GRAPH ?g{
-
     ?actID a prov:Activity .
     ?actID prov:startedAtTime ?start.
     ?actID prtr:activityName ?name .
@@ -246,12 +257,106 @@ def track_functions(prov_name, input_name=None, output_name=None, function_id=No
 
     all_times = user_defined_query(get_all_timing)
     all_times['start.value'] = pd.to_datetime(all_times['start.value'])
+
     if trace_back:
         df_filtered = all_times[all_times['start.value'] <= date_time_mine]
+        df_filtered = df_filtered.sort_values(by=['start.value'], ascending=False)
+        df_filtered["fileOperation"] =  None
+        df_filtered.iloc[-1, df_filtered.columns.get_loc("fileOperation")] = "File operation function"
     else:
         df_filtered = all_times[all_times['start.value'] >= date_time_mine]
+        df_filtered = df_filtered.sort_values(by=['start.value'], ascending=True)
+        df_filtered["fileOperation"] =  None
+        df_filtered.iloc[0, df_filtered.columns.get_loc("fileOperation")] = "File operation function"
 
     return df_filtered
+
+# def track_functions(prov_name, input_name=None, output_name=None, function_id=None, trace_back=True, prefixes=prefixes):
+#     '''
+#     Determine what functions have executed before or after a given input value, output value, or function id.
+#     Note, values may appear more than once, in this case the first instance is always used.
+#     :param prov_name:
+#     :param input_name:
+#     :param output_name:
+#     :param function_id:
+#     :param trace_back:
+#     :param prefixes:
+#     :return:
+#     '''
+#     if input_name:
+#         find_ba = prefixes + '''
+#         SELECT ?actID ?time
+#         FROM NAMED <''' + prov_name + '''>
+#
+#         WHERE {
+#         GRAPH ?g {
+#
+#         ?entityID prov:value "''' + input_name + '''" .
+#         ?be prov:entity ?entityID .
+#         ?actID prov:qualifiedUsage ?be .
+#         ?ba prov:hadActivity ?actID .
+#         ?actID prov:startedAtTime ?time .
+#         }
+#         }
+#         '''
+#         ba = user_defined_query(find_ba)
+#         time = ba['time.value'][0]
+#     elif output_name:
+#         find_ba = prefixes + '''
+#         SELECT ?actID ?time
+#         FROM NAMED <''' + prov_name + '''>
+#
+#         WHERE {
+#         GRAPH ?g {
+#
+#         ?entityID prov:value "''' + output_name + '''" .
+#         ?entityID prov:wasGeneratedBy ?actID .
+#         ?ba prov:hadActivity ?actID .
+#         ?actID prov:startedAtTime ?time .
+#         }
+#         }
+#         '''
+#         ba = user_defined_query(find_ba)
+#         time = ba['time.value'][0]
+#     elif function_id:
+#         find_ba = prefixes + '''
+#         SELECT ?time
+#         FROM NAMED <''' + prov_name + '''>
+#
+#         WHERE {
+#         GRAPH ?g {
+#         <''' + function_id + '''> prov:startedAtTime ?time .
+#         }
+#         }
+#         '''
+#         ba = user_defined_query(find_ba)
+#         time = ba['time.value'][0]
+#     else:
+#         raise Exception("Input error, please enter a value for either the input_name, output_name, or function_id")
+#
+#     date_time_mine = pd.to_datetime(time)
+#
+#     get_all_timing = prefixes + '''
+#     SELECT ?start ?name
+#     FROM NAMED <''' + prov_name + '''>
+#     WHERE {
+#     GRAPH ?g{
+#
+#     ?actID a prov:Activity .
+#     ?actID prov:startedAtTime ?start.
+#     ?actID prtr:activityName ?name .
+#     }
+#     }
+#     '''
+#
+#     all_times = user_defined_query(get_all_timing)
+#     all_times['start.value'] = pd.to_datetime(all_times['start.value'])
+#     if trace_back:
+#         df_filtered = all_times[all_times['start.value'] <= date_time_mine]
+#     else:
+#         df_filtered = all_times[all_times['start.value'] >= date_time_mine]
+#
+#     return df_filtered
 
 def function_query(prov_name, prefixes=prefixes, group_by=None):
     """
@@ -299,23 +404,23 @@ def function_query(prov_name, prefixes=prefixes, group_by=None):
 
 def module_query(prov_name, module_name, prefixes=prefixes):
     """
+    Query functions whose activitySource CONTAINS the input module_name (partial match).
 
-    :param prov_name:
-    :param module_name:
-    :param prefixes:
-    :return:
+    :param prov_name: Graph name to query
+    :param module_name: Substring to search for in activitySource
+    :param prefixes: SPARQL prefixes
+    :return: DataFrame with function names, IDs, start/end times
     """
 
     query = prefixes + '''
-    SELECT ?funcName ?funcID ?start ?end 
-
-    FROM NAMED <''' + prov_name + '''> 
+    SELECT ?funcName ?source ?start ?end ?funcID 
+    FROM NAMED <''' + prov_name + '''>
     WHERE {
     GRAPH ?g {
-
     ?funcID a prov:Activity ;
-        prtr:activityName ?funcName ;
-        prtr:activitySource "''' + module_name + '''" .
+            prtr:activityName ?funcName ;
+            prtr:activitySource ?source .
+    FILTER(regex(?source, "''' + module_name + '''", "i")) .
 
     OPTIONAL {
     ?funcID prov:startedAtTime ?start .
@@ -324,16 +429,49 @@ def module_query(prov_name, module_name, prefixes=prefixes):
     OPTIONAL {
     ?funcID prov:endedAtTime ?end .
     }
-
     }
     }
-
     '''
     full_data_frame = user_defined_query(query)
     return full_data_frame
 
+# def module_query(prov_name, module_name, prefixes=prefixes):
+#     """
+# 
+#     :param prov_name:
+#     :param module_name:
+#     :param prefixes:
+#     :return:
+#     """
+# 
+#     query = prefixes + '''
+#     SELECT ?funcName ?funcID ?start ?end
+#
+#     FROM NAMED <''' + prov_name + '''>
+#     WHERE {
+#     GRAPH ?g {
+#
+#     ?funcID a prov:Activity ;
+#         prtr:activityName ?funcName ;
+#         prtr:activitySource "''' + module_name + '''" .
+#
+#     OPTIONAL {
+#     ?funcID prov:startedAtTime ?start .
+#     }
+#
+#     OPTIONAL {
+#     ?funcID prov:endedAtTime ?end .
+#     }
+#
+#     }
+#     }
+#
+#     '''
+#     full_data_frame = user_defined_query(query)
+#     return full_data_frame
 
-def duration_query(prov_name, prefixes=prefixes):
+
+def duration_query(prov_name, prefixes=prefixes, function_graph=False, module_graph=False):
     query = prefixes + '''
     SELECT ?start ?end ?funcName ?module
 
@@ -360,4 +498,243 @@ def duration_query(prov_name, prefixes=prefixes):
     duration = df[['start.value', 'end.value']] = df[['start.value', 'end.value']].apply(pd.to_datetime)
     df['time_diff'] = df['end.value'] - df['start.value']
     df["diff_sec"] = df["time_diff"] / pd.Timedelta(seconds=1)
+
+    if function_graph:
+        duration_per_name = df.groupby("funcName.value")["diff_sec"].sum().sort_values(ascending=False)
+
+        # 2. Professional bar chart
+        fig, ax = plt.subplots(figsize=(12, 6))
+
+        bars = duration_per_name.plot(
+            kind="bar",
+            ax=ax,
+            color=plt.cm.Blues(np.linspace(0.3, 1, len(duration_per_name))),
+            edgecolor='navy',
+            linewidth=0.8,
+            alpha=0.85
+        )
+
+        # Professional styling
+        ax.set_xlabel("Function Name", fontsize=12, fontweight='bold')
+        ax.set_ylabel("Total Duration (seconds)", fontsize=12, fontweight='bold')
+        ax.set_title("Total Duration per Function", fontsize=14, fontweight='bold', pad=20)
+
+        # Rotate x-labels for readability
+        ax.tick_params(axis='x', rotation=45, labelsize=10)
+        ax.tick_params(axis='y', labelsize=11)
+
+        # Grid for better readability
+        ax.grid(axis='y', linestyle='--', alpha=0.5, linewidth=0.7)
+
+        # Tight layout with padding
+        plt.tight_layout(pad=2.0)
+
+        # Add value labels on bars
+        for bar in bars.patches:
+            height = bar.get_height()
+            ax.text(
+                bar.get_x() + bar.get_width() / 2.,
+                height + max(duration_per_name) * 0.01,
+                f'{height:.1f}s',
+                ha='center',
+                va='bottom',
+                fontsize=9,
+                fontweight='bold'
+            )
+
+        plt.show()
+
+    if module_graph:
+        duration_per_module = df.groupby("module.value")["diff_sec"].sum().sort_values(ascending=False)
+
+        # 2. Professional bar chart
+        fig, ax = plt.subplots(figsize=(12, 6))
+
+        bars = duration_per_module.plot(
+            kind="bar",
+            ax=ax,
+            color=plt.cm.Greens(np.linspace(0.3, 1, len(duration_per_module))),
+            edgecolor='darkgreen',
+            linewidth=0.8,
+            alpha=0.85
+        )
+
+        # Professional styling
+        ax.set_xlabel("Module Name", fontsize=12, fontweight='bold')
+        ax.set_ylabel("Total Duration (seconds)", fontsize=12, fontweight='bold')
+        ax.set_title("Total Duration per Module", fontsize=14, fontweight='bold', pad=20)
+
+        # Rotate x-labels for readability
+        ax.tick_params(axis='x', rotation=45, labelsize=10)
+        ax.tick_params(axis='y', labelsize=11)
+
+        # Grid for better readability
+        ax.grid(axis='y', linestyle='--', alpha=0.5, linewidth=0.7)
+
+        # Tight layout with padding
+        plt.tight_layout(pad=2.0)
+
+        # Add value labels on bars
+        for bar in bars.patches:
+            height = bar.get_height()
+            ax.text(
+                bar.get_x() + bar.get_width() / 2.,
+                height + max(duration_per_module) * 0.01,
+                f'{height:.1f}s',
+                ha='center',
+                va='bottom',
+                fontsize=9,
+                fontweight='bold'
+            )
+
+        plt.show()
+
+    return df
+
+
+def pipeline_profiling(stats):
+    with open(stats, "r", encoding="utf-8") as f:
+        text = f.read()
+
+    py_list = ast.literal_eval(text)
+
+    # Basic style
+    plt.style.use('seaborn-v0_8-whitegrid')
+    plt.rcParams.update({
+        "font.family": "sans-serif",
+        "font.size": 10,
+        "axes.labelsize": 11,
+        "axes.titlesize": 12,
+        "legend.fontsize": 9,
+        "xtick.labelsize": 9,
+        "ytick.labelsize": 9,
+        "axes.linewidth": 0.8,
+        "grid.linewidth": 0.4,
+        "grid.alpha": 0.4,
+        "figure.dpi": 150,
+    })
+
+    # Sort and extract
+    records = sorted(py_list, key=lambda r: r['timestamp'])
+    times = [datetime.fromtimestamp(r['timestamp']) for r in records]
+    current_mb = [r['python_memory']['current_mb'] for r in records]
+    func_names = [r['function_name'] for r in records]
+
+    fig, (ax_mem, ax_bar) = plt.subplots(
+        2, 1,
+        figsize=(6.5, 4.5),
+        sharex=True,
+        gridspec_kw={'height_ratios': [3, 1], 'hspace': 0.05}
+    )
+
+    # Top: memory scatter (all points)
+    ax_mem.scatter(times, current_mb, s=3, color="#1f77b4", alpha=0.9)
+    ax_mem.set_ylabel("Current memory (MB)")
+    ax_mem.set_title("Python memory usage and function intervals over time", pad=8)
+    ax_mem.grid(axis="y", linestyle="--")
+    ax_mem.grid(axis="x")
+
+    if current_mb:
+        ymin, ymax = min(current_mb), max(current_mb)
+        margin = 0.05 * (ymax - ymin if ymax > ymin else 1.0)
+        ax_mem.set_ylim(ymin - margin, ymax + margin)
+
+    # Bottom: horizontal bars
+    ax_bar.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    ax_bar.grid(axis="y")
+    ax_bar.grid(axis="x", linestyle="--")
+
+    # **NEW: Filter records to exclude None function names BEFORE calculating durations**
+    non_none_indices = [i for i, fn in enumerate(func_names) if fn is not None]
+
+    if len(non_none_indices) < 2:
+        # Need at least 2 non-None records to calculate durations
+        ax_bar.set_xlabel("Time")
+        ax_bar.set_yticks([])
+        fig.autofmt_xdate()
+        plt.tight_layout()
+        plt.show()
+        return
+
+    # Get filtered data for non-None functions only
+    filtered_times = [times[i] for i in non_none_indices]
+    filtered_funcs = [func_names[i] for i in non_none_indices]
+
+    # Calculate durations using ONLY non-None function transitions
+    start_times = filtered_times[:-1]
+    end_times = filtered_times[1:]
+    durations_sec = [(e - s).total_seconds() for s, e in zip(start_times, end_times)]
+    filtered_start_times = start_times
+
+    # Unique non-None function names
+    unique_funcs = list(dict.fromkeys(filtered_funcs))  # preserves order
+
+    # Distinct colors
+    tab20 = list(plt.get_cmap("tab20").colors)
+    distinct_colors = tab20[::2]
+    color_map = {
+        fn: distinct_colors[i % len(distinct_colors)]
+        for i, fn in enumerate(unique_funcs)
+    }
+
+    # Positions and widths
+    y_positions = np.arange(len(durations_sec))
+    start_times_num = mdates.date2num(filtered_start_times)
+    width = [d / (24 * 3600) for d in durations_sec]  # sec -> days
+
+    # Draw bars
+    for i, dur in enumerate(durations_sec):
+        fn = filtered_funcs[i]  # function at start of interval
+        color = color_map[fn]
+        ax_bar.barh(
+            y_positions[i],
+            width[i],
+            left=start_times_num[i],
+            color=color,
+            edgecolor="black",
+            linewidth=0.6,
+            height=0.95,
+        )
+
+    ax_bar.set_xlabel("Time")
+    ax_bar.set_yticks([])
+
+    # Legend for non-None functions only
+    handles, labels = [], []
+    for fn in unique_funcs:
+        label = str(fn)
+        handles.append(
+            plt.Line2D([0], [0], color=color_map[fn], lw=6, solid_capstyle="butt")
+        )
+        labels.append(label)
+
+    ax_bar.legend(
+        handles, labels,
+        title="Function",
+        frameon=False,
+        bbox_to_anchor=(1.02, 1.02),
+        loc="upper left",
+        borderaxespad=0.,
+    )
+
+    fig.autofmt_xdate(rotation=30, ha="right")
+    plt.tight_layout()
+    plt.show()
+
+def file_access(prov_name, prefixes=prefixes):
+    query = prefixes + '''
+        SELECT ?funcName ?fileName ?funcID
+
+        FROM NAMED <''' + prov_name + '''>
+        WHERE {
+        GRAPH ?g {
+        
+        ?funcID a prov:Activity;
+            prtr:activityName ?funcName ;
+            prtr:fileAccess ?fileName .
+        
+    }
+    }
+    '''
+    df = user_defined_query(query)
     return df

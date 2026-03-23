@@ -23,7 +23,8 @@ def get_arguments():
     parser.add_argument('--praetor-cpython', required=False, help='Whether to track cpython functions (Boolean)')
     parser.add_argument('--praetor-bootstrap', required=False, help='Whether to track bootstrapped functions (Boolean)')
     parser.add_argument('--praetor-process-monitor', required=False, help='Whether to profile functions (Boolean)')
-    args = parser.parse_args()
+    parser.add_argument("--praetor-stack-depth", required=False, help='Max Stack depth of praetor (Integer)')
+    args, unknown = parser.parse_known_args()
 
     output_directory = args.praetor_output
     if output_directory is None:
@@ -48,16 +49,22 @@ def get_arguments():
     if process_monitor is None:
         process_monitor = False
 
+    stack_depth = args.praetor_stack_depth
+    if stack_depth is None:
+        stack_depth = 5
+    else:
+        stack_depth = int(stack_depth) + 4
+
     return {"out_dir": output_directory, "func_blacklist": function_blacklist, "module_blacklist": module_blacklist,
             "big_entities": big_entities, "cpython": cpython, "bootstrap": bootstrap,
-            "process_monitor": process_monitor}
+            "process_monitor": process_monitor, "stack_depth": stack_depth}
 
 
 arg_dict = get_arguments()
 tracer = CallTracer(output_directory=arg_dict["out_dir"], slim=True, process_monitor=arg_dict["process_monitor"],
                     block_list_func=arg_dict["func_blacklist"], block_list_mod=arg_dict["module_blacklist"],
                     store_large_values=arg_dict["big_entities"], cpython=True,
-                    bootstrap=True)
+                    bootstrap=True, max_depth=arg_dict["stack_depth"])
 sys.setprofile(tracer)
 
 atexit.register(tracer.close)

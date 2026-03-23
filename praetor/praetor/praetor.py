@@ -14,8 +14,11 @@ import reprlib
 import hashlib
 import pickle
 
-from praetor.transform_output import create_full_json
-from praetor.process_monitor import DynamicProcessMonitor
+from praetor import transform_output
+import praetor.process_monitor as proc_mon
+
+# from praetor.transform_output import create_full_json
+# from praetor.process_monitor import DynamicProcessMonitor
 
 custom_repr = reprlib.Repr()
 custom_repr.maxlist = 80
@@ -59,7 +62,7 @@ def get_modules(pipeline_id, out_directory, modules):
     bindings['var'].update(modules_pre)
     bindings['var']['python_version'] = py_version
     bindings['var']['lifeline'] = 'urn_uuid:{}'.format(pipeline_id)
-    bindings['var']['run_cmd'] = f"{sys.executable} {' '.join(sys.argv)}"
+    bindings['var']['run_cmd'] = f"prtr:{sys.executable} {' '.join(sys.argv)}"
 
     json_dir = out_directory + '/json/'
 
@@ -135,7 +138,7 @@ class CallTracer:
 
     def __init__(self, output_directory="./output/", block_list_mod=None, block_list_func=None, cpython=False,
                  bootstrap=False, store_large_values=False, only_main=False, slim=False, monitor_interval=1.0,
-                 process_monitor=False):
+                 process_monitor=False, max_depth=5):
         """Setup for the CallTracer class
         :param output_directory: Where generated provenance will be stored
         :param block_list_mod: block_list of python modules
@@ -147,7 +150,7 @@ class CallTracer:
         self.record_prov = True
         self.process_monitor = process_monitor
         if self.process_monitor:
-            self.monitor = DynamicProcessMonitor(base_interval=monitor_interval)
+            self.monitor = proc_mon.DynamicProcessMonitor(base_interval=monitor_interval)
 
         self.calls = {}
         self.session_id = generate_pipeline_id()  # change praetor to name of pipeline
@@ -198,6 +201,8 @@ class CallTracer:
         self.only_main = only_main
         self.slim = slim
         self.prefixes = ("_", "<")
+        self.max_depth = max_depth
+        # self.start_monitoring()
 
     def __call__(self, frame, event, arg):
         """Method to record metadata for each python call event
@@ -206,7 +211,11 @@ class CallTracer:
         :param arg: Argument of frame
         :returns self"""
 
+        if not self.record_prov:
+            return self
+
         if event in ["call", "return"]:
+
             code = frame.f_code
             func_name = code.co_name
             module_name = frame.f_globals.get("__name__", None)
@@ -217,7 +226,10 @@ class CallTracer:
             if self.slim:
                 if func_name.startswith(self.prefixes):
                     return self
-                if "._" in module_name:
+                try:
+                    if "._" in module_name:
+                        return self
+                except TypeError:
                     return self
 
             if module_name == "praetor":
@@ -230,9 +242,6 @@ class CallTracer:
             # #
             # Ignore module-level frames
             if func_name == "<module>":
-                return self
-
-            if not self.record_prov:
                 return self
 
             if self.bootstrap and module_name in ["importlib._bootstrap_external", "importlib._bootstrap"]:
@@ -249,6 +258,9 @@ class CallTracer:
             if self.block_list_func:
                 if func_name in self.block_list_func:
                     return self
+
+            if self.is_stack_deeper_than(self.max_depth):
+                return self
 
             argcount = code.co_argcount
             varnames = code.co_varnames
@@ -272,9 +284,9 @@ class CallTracer:
             if event == "call":
 
                 if self.process_monitor:
-                    process_stats = self.monitor.high_freq_snapshot(func_name, 0.01)
+                    process_stats = self.monitor.high_freq_snapshot(func_name, 1.0)
                     self.process_count = process_stats["process_count"]
-                    self.total_memory = process_stats["total_rss_mb"]
+                    self.total_memory = process_stats["python_memory"]["current_mb"]
                     self.files_opened = process_stats["newly_opened_files"]
 
                 self.start_time = self.date_time_stamp()
@@ -285,9 +297,9 @@ class CallTracer:
             elif event == "return":
 
                 if self.process_monitor:
-                    process_stats = self.monitor.high_freq_snapshot(func_name, 1.0)
+                    process_stats = self.monitor.high_freq_snapshot(func_name, 10.0)
                     self.process_count = process_stats["process_count"]
-                    self.total_memory = process_stats["total_rss_mb"]
+                    self.total_memory = process_stats["python_memory"]["current_mb"]
                     self.files_opened = process_stats["newly_opened_files"]
 
                 self.output = arg
@@ -298,7 +310,12 @@ class CallTracer:
 
         elif event in ["c_call", "c_return"]:
 
+
+
             if not self.cpython:
+                return self
+
+            if self.is_stack_deeper_than(self.max_depth):
                 return self
 
             cfunc = arg
@@ -324,19 +341,27 @@ class CallTracer:
             }
             self.inputs = inputs
 
-            if self.process_monitor:
-                process_stats = self.monitor.high_freq_snapshot()
-                self.process_count = process_stats["process_count"]
-                self.total_memory = process_stats["total_rss_mb"]
-                self.files_opened = process_stats["newly_opened_files"]
-
             if self.cpython and event == "c_call":
+
+                if self.process_monitor:
+                    process_stats = self.monitor.high_freq_snapshot(func_name, 0.01)
+                    self.process_count = process_stats["process_count"]
+                    self.total_memory = process_stats["python_memory"]["current_mb"]
+                    self.files_opened = process_stats["newly_opened_files"]
+
                 self.start_time = self.date_time_stamp()
                 self.prov_call_in()
                 self.dump_json(mode="call")
                 return self
 
             if self.cpython and event == "c_return":
+
+                if self.process_monitor:
+                    process_stats = self.monitor.high_freq_snapshot(func_name, 1.0)
+                    self.process_count = process_stats["process_count"]
+                    self.total_memory = process_stats["python_memory"]["current_mb"]
+                    self.files_opened = process_stats["newly_opened_files"]
+
                 self.end_time = self.date_time_stamp()
                 self.output = "None"
                 self.prov_call_out()
@@ -453,6 +478,7 @@ class CallTracer:
     def track_call(self):
         """Trace the python stack to determine if a function was called by another"""
         stack = inspect.stack()
+        stack_depth = len(stack)
         caller = 'main'
         for frame in stack:
             if frame.function == "<module>":
@@ -460,7 +486,20 @@ class CallTracer:
             elif frame.function == self.last_activity['name']:
                 caller = self.last_activity['name']
                 break
-        return caller
+        return caller, stack_depth
+
+    @staticmethod
+    def is_stack_deeper_than(limit: int) -> bool:
+        # Start at current frame
+        frame = inspect.currentframe()
+        depth = 0
+
+        # Walk back up the stack but stop once we know it's deep enough
+        while frame is not None and depth <= limit:
+            depth += 1
+            frame = frame.f_back
+
+        return depth > limit
 
     def start_monitoring(self):
         """Start continuous background monitoring"""
@@ -575,11 +614,13 @@ class CallTracer:
     def close(self):
         """Close json dump document at end of provenance generation"""
         if self.close_file_var and self.out_handle:
-            self.stop_monitoring()
             self.record_prov = False
-            with open(self.out_directory + "stats.txt", "w") as f:
-                f.write(str(self.monitor.get_stats()))
-            create_full_json(self.agent_json, self.out_handle.name)
+            # print(self.record_prov)
+            if self.process_monitor:
+                self.stop_monitoring()
+                with open(self.out_directory + "stats.txt", "w") as f:
+                    f.write(str(self.monitor.get_stats()))
+            transform_output.create_full_json(self.agent_json, self.out_handle.name)
             self.out_handle.close()
             self.close_file_var = False
 
